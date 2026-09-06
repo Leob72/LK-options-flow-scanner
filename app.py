@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta
 
 # ============================================================
 # LK INSTITUTIONAL OPTIONS FLOW SCANNER
@@ -13,6 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
+
 # ============================================================
 # CUSTOM STYLE
 # ============================================================
@@ -21,16 +21,17 @@ st.markdown("""
 <style>
 
 /* MAIN BACKGROUND */
-.main {
+.stApp {
     background-color: #0E1117;
 }
 
 
-/* TITLE */
+/* MAIN TITLE */
 .title {
     font-size: 38px;
     font-weight: 700;
-    color: white;
+    color: #FFFFFF;
+    margin-bottom: 5px;
 }
 
 
@@ -38,121 +39,114 @@ st.markdown("""
 .subtitle {
     font-size: 18px;
     color: #A0A0A0;
+    margin-bottom: 25px;
 }
 
 
 /* CALL ALERT BOX */
 .call-box {
     background-color: #123D2A;
-    border-left: 6px solid #00ff00;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    color: white !important;
+    border-left: 7px solid #00E676;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    color: #FFFFFF !important;
 }
 
 
 /* PUT ALERT BOX */
 .put-box {
     background-color: #421C24;
-    border-left: 6px solid #ff0000;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    color: white !important;
+    border-left: 7px solid #FF1744;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    color: #FFFFFF !important;
 }
 
 
-/* METRIC LABEL */
-.metric-label {
-    color: #A0A0A0;
-    font-size: 14px;
+/* FORCE WHITE TEXT INSIDE ALERT BOXES */
+.call-box,
+.call-box p,
+.call-box b,
+.call-box div {
+    color: #FFFFFF !important;
 }
 
 
-/* METRIC VALUE */
-.metric-value {
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
+.put-box,
+.put-box p,
+.put-box b,
+.put-box div {
+    color: #FFFFFF !important;
 }
 
 
-/* ============================================================
-   BULLISH - CALL TEXT COLORS
-   ============================================================ */
-
-.bullish-alert,
-.bullish-card {
-    color: white !important;
-}
-
-.bullish-alert h1,
-.bullish-alert h2,
-.bullish-alert h3,
-.bullish-alert h4,
-.bullish-card h1,
-.bullish-card h2,
-.bullish-card h3,
-.bullish-card h4 {
-    color: #00ff00 !important;
-}
-
-.bullish-alert p,
-.bullish-alert div,
-.bullish-alert span,
-.bullish-card p,
-.bullish-card div,
-.bullish-card span {
-    color: white !important;
+/* CALL TITLE */
+.call-title {
+    color: #FFFFFF !important;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 18px;
 }
 
 
-/* ============================================================
-   BEARISH - PUT TEXT COLORS
-   ============================================================ */
-
-.bearish-alert,
-.bearish-card {
-    color: white !important;
-}
-
-.bearish-alert h1,
-.bearish-alert h2,
-.bearish-alert h3,
-.bearish-alert h4,
-.bearish-card h1,
-.bearish-card h2,
-.bearish-card h3,
-.bearish-card h4 {
-    color: #ff0000 !important;
-}
-
-.bearish-alert p,
-.bearish-alert div,
-.bearish-alert span,
-.bearish-card p,
-.bearish-card div,
-.bearish-card span {
-    color: white !important;
+/* PUT TITLE */
+.put-title {
+    color: #FFFFFF !important;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 18px;
 }
 
 
-/* BULLISH DOT */
-.bullish-dot {
-    color: #00ff00 !important;
+/* GREEN TEXT */
+.green-text {
+    color: #00E676 !important;
+    font-weight: 700;
 }
 
 
-/* BEARISH DOT */
-.bearish-dot {
-    color: #ff0000 !important;
+/* RED TEXT */
+.red-text {
+    color: #FF1744 !important;
+    font-weight: 700;
+}
+
+
+/* DETAIL ROWS */
+.alert-detail {
+    color: #FFFFFF !important;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+
+/* SECTION TITLE */
+.section-title {
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 
 /* DIVIDER */
 hr {
     border-color: #303030;
+}
+
+
+/* METRIC LABEL */
+[data-testid="stMetricLabel"] {
+    color: #A0A0A0;
+}
+
+
+/* METRIC VALUE */
+[data-testid="stMetricValue"] {
+    color: #FFFFFF;
 }
 
 </style>
@@ -182,6 +176,7 @@ st.write("")
 
 st.sidebar.markdown("## ⚙️ Scanner Controls")
 
+
 tickers = [
     "AAPL",
     "NVDA",
@@ -195,11 +190,13 @@ tickers = [
     "MSFT"
 ]
 
+
 selected_tickers = st.sidebar.multiselect(
     "Select Tickers",
     tickers,
     default=tickers
 )
+
 
 minimum_contracts = st.sidebar.slider(
     "Minimum Contracts",
@@ -209,6 +206,7 @@ minimum_contracts = st.sidebar.slider(
     step=100
 )
 
+
 minimum_premium = st.sidebar.slider(
     "Minimum Premium ($)",
     min_value=10000,
@@ -217,12 +215,15 @@ minimum_premium = st.sidebar.slider(
     step=50000
 )
 
+
 flow_type = st.sidebar.radio(
     "Flow Type",
     ["All", "CALLS", "PUTS"]
 )
 
+
 st.sidebar.write("")
+
 
 scan_button = st.sidebar.button(
     "🔍 Scan Institutional Flow",
@@ -234,10 +235,8 @@ scan_button = st.sidebar.button(
 # SAMPLE DATA
 # ============================================================
 
-# Esta sección puede conectarse posteriormente a una API real.
-# Por ahora mantiene la estructura del scanner.
-
 sample_data = [
+
     {
         "ticker": "AAPL",
         "type": "CALL",
@@ -247,6 +246,7 @@ sample_data = [
         "premium": 1800000,
         "signal": "Bullish Institutional Flow"
     },
+
     {
         "ticker": "NVDA",
         "type": "PUT",
@@ -256,6 +256,7 @@ sample_data = [
         "premium": 3200000,
         "signal": "Bearish Institutional Flow"
     },
+
     {
         "ticker": "TSLA",
         "type": "CALL",
@@ -265,6 +266,7 @@ sample_data = [
         "premium": 1450000,
         "signal": "Bullish Institutional Flow"
     },
+
     {
         "ticker": "QQQ",
         "type": "PUT",
@@ -274,6 +276,7 @@ sample_data = [
         "premium": 2200000,
         "signal": "Bearish Institutional Flow"
     },
+
     {
         "ticker": "META",
         "type": "CALL",
@@ -283,6 +286,7 @@ sample_data = [
         "premium": 3900000,
         "signal": "Bullish Institutional Flow"
     }
+
 ]
 
 
@@ -291,6 +295,7 @@ sample_data = [
 # ============================================================
 
 filtered_data = []
+
 
 for item in sample_data:
 
@@ -316,21 +321,28 @@ for item in sample_data:
 # METRICS
 # ============================================================
 
-bullish_flows = len([
-    x for x in filtered_data
-    if x["type"] == "CALL"
-])
+bullish_flows = len(
+    [
+        x for x in filtered_data
+        if x["type"] == "CALL"
+    ]
+)
 
-bearish_flows = len([
-    x for x in filtered_data
-    if x["type"] == "PUT"
-])
+
+bearish_flows = len(
+    [
+        x for x in filtered_data
+        if x["type"] == "PUT"
+    ]
+)
+
 
 call_premium = sum(
     x["premium"]
     for x in filtered_data
     if x["type"] == "CALL"
 )
+
 
 put_premium = sum(
     x["premium"]
@@ -341,12 +353,14 @@ put_premium = sum(
 
 col1, col2, col3, col4 = st.columns(4)
 
+
 with col1:
 
     st.metric(
         "🟢 BULLISH CALL FLOW",
         bullish_flows
     )
+
 
 with col2:
 
@@ -355,12 +369,14 @@ with col2:
         bearish_flows
     )
 
+
 with col3:
 
     st.metric(
         "💰 CALL PREMIUM",
         f"${call_premium:,.0f}"
     )
+
 
 with col4:
 
@@ -379,7 +395,8 @@ st.divider()
 # ============================================================
 
 st.markdown(
-    "## 🚨 Institutional Options Flow Alerts"
+    '<div class="section-title">🚨 Institutional Options Flow Alerts</div>',
+    unsafe_allow_html=True
 )
 
 
@@ -393,9 +410,11 @@ if len(filtered_data) == 0:
         "No institutional options flow detected based on current filters."
     )
 
+
 else:
 
     for item in filtered_data:
+
 
         # ====================================================
         # BULLISH CALL
@@ -403,55 +422,45 @@ else:
 
         if item["type"] == "CALL":
 
+            call_html = f"""<div class="call-box">
+<div class="call-title">
+🟢 {item["ticker"]} —
+<span class="green-text">CALL</span>
+BUYING DETECTED
+</div>
+
+<div class="alert-detail">
+<b>Expiration:</b> {item["expiration"]}
+</div>
+
+<div class="alert-detail">
+<b>Contracts:</b> {item["contracts"]:,}
+<span class="green-text">CALLS</span>
+</div>
+
+<div class="alert-detail">
+<b>Strike:</b> ${item["strike"]}
+</div>
+
+<div class="alert-detail">
+<b>Premium:</b> ${item["premium"]:,.0f}
+</div>
+
+<div class="alert-detail">
+<b>Type:</b> Aggressive Buy
+</div>
+
+<div class="alert-detail">
+<b>Signal:</b>
+<span class="green-text">
+🟢 {item["signal"]}
+</span>
+</div>
+
+</div>"""
+
             st.markdown(
-                f"""
-                <div class="call-box bullish-alert">
-
-                    <h2>
-                        🟢 {item["ticker"]} —
-                        <span style="color:#00ff00 !important;">
-                        CALL
-                        </span>
-                        BUYING DETECTED
-                    </h2>
-
-                    <p>
-                        <b>Expiration:</b>
-                        {item["expiration"]}
-                    </p>
-
-                    <p>
-                        <b>Contracts:</b>
-                        {item["contracts"]:,}
-                        <span style="color:#00ff00 !important;">
-                        CALLS
-                        </span>
-                    </p>
-
-                    <p>
-                        <b>Strike:</b>
-                        ${item["strike"]}
-                    </p>
-
-                    <p>
-                        <b>Premium:</b>
-                        ${item["premium"]:,.0f}
-                    </p>
-
-                    <p>
-                        <b>Type:</b>
-                        Aggressive Buy
-                    </p>
-
-                    <p>
-                        <b>Signal:</b>
-                        <span style="color:#00ff00 !important;">
-                        🟢 {item["signal"]}
-                        </span>
-                    </p>
-
-                </div>
-                """,
+                call_html,
                 unsafe_allow_html=True
             )
 
@@ -462,55 +471,45 @@ else:
 
         elif item["type"] == "PUT":
 
+            put_html = f"""<div class="put-box">
+<div class="put-title">
+🔴 {item["ticker"]} —
+<span class="red-text">PUT</span>
+BUYING DETECTED
+</div>
+
+<div class="alert-detail">
+<b>Expiration:</b> {item["expiration"]}
+</div>
+
+<div class="alert-detail">
+<b>Contracts:</b> {item["contracts"]:,}
+<span class="red-text">PUTS</span>
+</div>
+
+<div class="alert-detail">
+<b>Strike:</b> ${item["strike"]}
+</div>
+
+<div class="alert-detail">
+<b>Premium:</b> ${item["premium"]:,.0f}
+</div>
+
+<div class="alert-detail">
+<b>Type:</b> Aggressive Buy
+</div>
+
+<div class="alert-detail">
+<b>Signal:</b>
+<span class="red-text">
+🔴 {item["signal"]}
+</span>
+</div>
+
+</div>"""
+
             st.markdown(
-                f"""
-                <div class="put-box bearish-alert">
-
-                    <h2>
-                        🔴 {item["ticker"]} —
-                        <span style="color:#ff0000 !important;">
-                        PUT
-                        </span>
-                        BUYING DETECTED
-                    </h2>
-
-                    <p>
-                        <b>Expiration:</b>
-                        {item["expiration"]}
-                    </p>
-
-                    <p>
-                        <b>Contracts:</b>
-                        {item["contracts"]:,}
-                        <span style="color:#ff0000 !important;">
-                        PUTS
-                        </span>
-                    </p>
-
-                    <p>
-                        <b>Strike:</b>
-                        ${item["strike"]}
-                    </p>
-
-                    <p>
-                        <b>Premium:</b>
-                        ${item["premium"]:,.0f}
-                    </p>
-
-                    <p>
-                        <b>Type:</b>
-                        Aggressive Buy
-                    </p>
-
-                    <p>
-                        <b>Signal:</b>
-                        <span style="color:#ff0000 !important;">
-                        🔴 {item["signal"]}
-                        </span>
-                    </p>
-
-                </div>
-                """,
+                put_html,
                 unsafe_allow_html=True
             )
 
@@ -520,6 +519,7 @@ else:
 # ============================================================
 
 st.divider()
+
 
 st.caption(
     "LK Institutional Options Flow Scanner • "
