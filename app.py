@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 # ============================================================
-# LK INSTITUTIONAL OPTIONS FLOW SCANNER v1.0
+# LK INSTITUTIONAL OPTIONS FLOW SCANNER
 # Smart Money Detection Dashboard
 # ============================================================
 
@@ -13,54 +13,64 @@ st.set_page_config(
     layout="wide"
 )
 
-# ------------------------------------------------------------
+# ============================================================
 # CUSTOM STYLE
-# ------------------------------------------------------------
+# ============================================================
 
 st.markdown("""
 <style>
 
-    .main {
-        background-color: #0E1117;
-    }
+/* MAIN BACKGROUND */
+.main {
+    background-color: #0E1117;
+}
 
-    .title {
-        font-size: 38px;
-        font-weight: 700;
-        color: white;
-    }
 
-    .subtitle {
-        font-size: 18px;
-        color: #A0A0A0;
-    }
+/* TITLE */
+.title {
+    font-size: 38px;
+    font-weight: 700;
+    color: white;
+}
 
-    .call-box {
-        background-color: #123D2A;
-        border-left: 6px solid #00C853;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
 
-    .put-box {
-        background-color: #421C24;
-        border-left: 6px solid #FF3B4D;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
+/* SUBTITLE */
+.subtitle {
+    font-size: 18px;
+    color: #A0A0A0;
+}
 
-    .metric-label {
-        color: #A0A0A0;
-        font-size: 14px;
-    }
 
-    .metric-value {
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
-    }
+/* CALL ALERT BOX */
+.call-box {
+    background-color: #123D2A;
+    border-left: 6px solid #00ff00;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: white !important;
+}
+
+
+/* PUT ALERT BOX */
+.put-box {
+    background-color: #421C24;
+    border-left: 6px solid #ff0000;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: white !important;
+}
+
+
+/* METRIC LABEL */
+.metric-label {
+    color: #A0A0A0;
+    font-size: 14px;
+}
+
+
+/* METRIC VALUE */
 .metric-value {
     color: white;
     font-size: 22px;
@@ -68,62 +78,109 @@ st.markdown("""
 }
 
 
-/* BULLISH - CALL */
-.bullish-alert, .bullish-card {
-    color: #FFFFFF !important;
+/* ============================================================
+   BULLISH - CALL TEXT COLORS
+   ============================================================ */
+
+.bullish-alert,
+.bullish-card {
+    color: white !important;
 }
 
-.bullish-alert h1, .bullish-alert h2, .bullish-alert h3,
-.bullish-card h1, .bullish-card h2, .bullish-card h3 {
+.bullish-alert h1,
+.bullish-alert h2,
+.bullish-alert h3,
+.bullish-alert h4,
+.bullish-card h1,
+.bullish-card h2,
+.bullish-card h3,
+.bullish-card h4 {
     color: #00ff00 !important;
 }
 
-.bullish-alert p, .bullish-alert div, .bullish-alert span,
-.bullish-card p, .bullish-card div, .bullish-card span {
-    color: #FFFFFF !important;
+.bullish-alert p,
+.bullish-alert div,
+.bullish-alert span,
+.bullish-card p,
+.bullish-card div,
+.bullish-card span {
+    color: white !important;
 }
 
 
-/* BEARISH - PUT */
-.bearish-alert, .bearish-card {
-    color: #FFFFFF !important;
+/* ============================================================
+   BEARISH - PUT TEXT COLORS
+   ============================================================ */
+
+.bearish-alert,
+.bearish-card {
+    color: white !important;
 }
 
-.bearish-alert h1, .bearish-alert h2, .bearish-alert h3,
-.bearish-card h1, .bearish-card h2, .bearish-card h3 {
+.bearish-alert h1,
+.bearish-alert h2,
+.bearish-alert h3,
+.bearish-alert h4,
+.bearish-card h1,
+.bearish-card h2,
+.bearish-card h3,
+.bearish-card h4 {
     color: #ff0000 !important;
 }
 
-.bearish-alert p, .bearish-alert div, .bearish-alert span,
-.bearish-card p, .bearish-card div, .bearish-card span {
-    color: #FFFFFF !important;
+.bearish-alert p,
+.bearish-alert div,
+.bearish-alert span,
+.bearish-card p,
+.bearish-card div,
+.bearish-card span {
+    color: white !important;
 }
+
+
+/* BULLISH DOT */
+.bullish-dot {
+    color: #00ff00 !important;
+}
+
+
+/* BEARISH DOT */
+.bearish-dot {
+    color: #ff0000 !important;
+}
+
+
+/* DIVIDER */
+hr {
+    border-color: #303030;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
 
-# ------------------------------------------------------------
+# ============================================================
 # HEADER
-# ------------------------------------------------------------
+# ============================================================
 
 st.markdown(
-    '<div class="title">LK Institutional Options Flow Scanner</div>',
+    '<div class="title">📊 LK Institutional Options Flow Scanner</div>',
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<div class="subtitle">Smart Money • Unusual Options Activity • Institutional Flow Detection</div>',
+    '<div class="subtitle">Smart Money Detection • Institutional Options Activity</div>',
     unsafe_allow_html=True
 )
 
-st.divider()
+st.write("")
 
 
-# ------------------------------------------------------------
-# SIDEBAR
-# ------------------------------------------------------------
+# ============================================================
+# SIDEBAR CONTROLS
+# ============================================================
 
-st.sidebar.header("⚙️ Scanner Controls")
+st.sidebar.markdown("## ⚙️ Scanner Controls")
 
 tickers = [
     "AAPL",
@@ -144,7 +201,7 @@ selected_tickers = st.sidebar.multiselect(
     default=tickers
 )
 
-min_contracts = st.sidebar.slider(
+minimum_contracts = st.sidebar.slider(
     "Minimum Contracts",
     min_value=100,
     max_value=10000,
@@ -152,237 +209,305 @@ min_contracts = st.sidebar.slider(
     step=100
 )
 
-min_premium = st.sidebar.slider(
+minimum_premium = st.sidebar.slider(
     "Minimum Premium ($)",
-    min_value=100000,
-    max_value=10000000,
-    value=1000000,
-    step=100000
+    min_value=10000,
+    max_value=5000000,
+    value=100000,
+    step=50000
 )
 
-flow_filter = st.sidebar.radio(
+flow_type = st.sidebar.radio(
     "Flow Type",
-    ["ALL", "CALLS", "PUTS"]
+    ["All", "CALLS", "PUTS"]
 )
 
-st.sidebar.divider()
+st.sidebar.write("")
 
-st.sidebar.markdown("### Scanner Status")
-st.sidebar.success("● SYSTEM READY")
-st.sidebar.caption("Demo Mode - Live Data API Coming Next")
+scan_button = st.sidebar.button(
+    "🔍 Scan Institutional Flow",
+    use_container_width=True
+)
 
 
-# ------------------------------------------------------------
-# DEMO DATA
-# ------------------------------------------------------------
+# ============================================================
+# SAMPLE DATA
+# ============================================================
 
-today = datetime.now().date()
+# Esta sección puede conectarse posteriormente a una API real.
+# Por ahora mantiene la estructura del scanner.
 
-data = [
+sample_data = [
     {
-        "Ticker": "AAPL",
-        "Type": "CALL",
-        "Contracts": 2500,
-        "Expiration": today + timedelta(days=4),
-        "Strike": 325,
-        "Premium": 1800000,
-        "Flow": "Aggressive Buy",
-        "Sentiment": "BULLISH"
+        "ticker": "AAPL",
+        "type": "CALL",
+        "expiration": "Sep 10",
+        "contracts": 2500,
+        "strike": 325,
+        "premium": 1800000,
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "NVDA",
-        "Type": "PUT",
-        "Contracts": 4200,
-        "Expiration": today + timedelta(days=7),
-        "Strike": 175,
-        "Premium": 3200000,
-        "Flow": "Aggressive Buy",
-        "Sentiment": "BEARISH"
+        "ticker": "NVDA",
+        "type": "PUT",
+        "expiration": "Sep 13",
+        "contracts": 4200,
+        "strike": 175,
+        "premium": 3200000,
+        "signal": "Bearish Institutional Flow"
     },
     {
-        "Ticker": "TSLA",
-        "Type": "CALL",
-        "Contracts": 1800,
-        "Expiration": today + timedelta(days=11),
-        "Strike": 350,
-        "Premium": 2100000,
-        "Flow": "Sweep",
-        "Sentiment": "BULLISH"
+        "ticker": "TSLA",
+        "type": "CALL",
+        "expiration": "Sep 13",
+        "contracts": 1800,
+        "strike": 350,
+        "premium": 1450000,
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "PLTR",
-        "Type": "CALL",
-        "Contracts": 5200,
-        "Expiration": today + timedelta(days=6),
-        "Strike": 180,
-        "Premium": 2900000,
-        "Flow": "Block Trade",
-        "Sentiment": "BULLISH"
+        "ticker": "QQQ",
+        "type": "PUT",
+        "expiration": "Sep 10",
+        "contracts": 3100,
+        "strike": 580,
+        "premium": 2200000,
+        "signal": "Bearish Institutional Flow"
     },
     {
-        "Ticker": "META",
-        "Type": "PUT",
-        "Contracts": 3100,
-        "Expiration": today + timedelta(days=14),
-        "Strike": 720,
-        "Premium": 4100000,
-        "Flow": "Sweep",
-        "Sentiment": "BEARISH"
-    },
-    {
-        "Ticker": "AMZN",
-        "Type": "CALL",
-        "Contracts": 3600,
-        "Expiration": today + timedelta(days=8),
-        "Strike": 265,
-        "Premium": 2500000,
-        "Flow": "Aggressive Buy",
-        "Sentiment": "BULLISH"
-    },
-    {
-        "Ticker": "QQQ",
-        "Type": "PUT",
-        "Contracts": 6000,
-        "Expiration": today + timedelta(days=5),
-        "Strike": 590,
-        "Premium": 5200000,
-        "Flow": "Block Trade",
-        "Sentiment": "BEARISH"
-    },
-    {
-        "Ticker": "SPY",
-        "Type": "CALL",
-        "Contracts": 7500,
-        "Expiration": today + timedelta(days=3),
-        "Strike": 650,
-        "Premium": 6800000,
-        "Flow": "Sweep",
-        "Sentiment": "BULLISH"
+        "ticker": "META",
+        "type": "CALL",
+        "expiration": "Sep 13",
+        "contracts": 3600,
+        "strike": 750,
+        "premium": 3900000,
+        "signal": "Bullish Institutional Flow"
     }
 ]
 
-df = pd.DataFrame(data)
+
+# ============================================================
+# FILTER DATA
+# ============================================================
+
+filtered_data = []
+
+for item in sample_data:
+
+    if item["ticker"] not in selected_tickers:
+        continue
+
+    if item["contracts"] < minimum_contracts:
+        continue
+
+    if item["premium"] < minimum_premium:
+        continue
+
+    if flow_type == "CALLS" and item["type"] != "CALL":
+        continue
+
+    if flow_type == "PUTS" and item["type"] != "PUT":
+        continue
+
+    filtered_data.append(item)
 
 
-# ------------------------------------------------------------
-# FILTERS
-# ------------------------------------------------------------
+# ============================================================
+# METRICS
+# ============================================================
 
-df_filtered = df.copy()
+bullish_flows = len([
+    x for x in filtered_data
+    if x["type"] == "CALL"
+])
 
-df_filtered = df_filtered[
-    df_filtered["Ticker"].isin(selected_tickers)
-]
+bearish_flows = len([
+    x for x in filtered_data
+    if x["type"] == "PUT"
+])
 
-df_filtered = df_filtered[
-    df_filtered["Contracts"] >= min_contracts
-]
+call_premium = sum(
+    x["premium"]
+    for x in filtered_data
+    if x["type"] == "CALL"
+)
 
-df_filtered = df_filtered[
-    df_filtered["Premium"] >= min_premium
-]
-
-if flow_filter == "CALLS":
-    df_filtered = df_filtered[df_filtered["Type"] == "CALL"]
-
-elif flow_filter == "PUTS":
-    df_filtered = df_filtered[df_filtered["Type"] == "PUT"]
-
-
-# ------------------------------------------------------------
-# TOP METRICS
-# ------------------------------------------------------------
-
-calls = len(df_filtered[df_filtered["Type"] == "CALL"])
-puts = len(df_filtered[df_filtered["Type"] == "PUT"])
-
-call_premium = df_filtered[
-    df_filtered["Type"] == "CALL"
-]["Premium"].sum()
-
-put_premium = df_filtered[
-    df_filtered["Type"] == "PUT"
-]["Premium"].sum()
+put_premium = sum(
+    x["premium"]
+    for x in filtered_data
+    if x["type"] == "PUT"
+)
 
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(
-    "🟢 BULLISH CALL FLOW",
-    calls
-)
+with col1:
 
-col2.metric(
-    "🔴 BEARISH PUT FLOW",
-    puts
-)
+    st.metric(
+        "🟢 BULLISH CALL FLOW",
+        bullish_flows
+    )
 
-col3.metric(
-    "💰 CALL PREMIUM",
-    f"${call_premium:,.0f}"
-)
+with col2:
 
-col4.metric(
-    "💰 PUT PREMIUM",
-    f"${put_premium:,.0f}"
-)
+    st.metric(
+        "🔴 BEARISH PUT FLOW",
+        bearish_flows
+    )
+
+with col3:
+
+    st.metric(
+        "💰 CALL PREMIUM",
+        f"${call_premium:,.0f}"
+    )
+
+with col4:
+
+    st.metric(
+        "💰 PUT PREMIUM",
+        f"${put_premium:,.0f}"
+    )
 
 
+st.write("")
 st.divider()
 
 
-# ------------------------------------------------------------
-# SMART MONEY SIGNALS
-# ------------------------------------------------------------
+# ============================================================
+# ALERT SECTION
+# ============================================================
 
-st.subheader("🚨 Institutional Options Flow Alerts")
+st.markdown(
+    "## 🚨 Institutional Options Flow Alerts"
+)
 
-if len(df_filtered) == 0:
 
-    st.warning("No unusual options activity detected with current filters.")
+# ============================================================
+# DISPLAY ALERTS
+# ============================================================
+
+if len(filtered_data) == 0:
+
+    st.warning(
+        "No institutional options flow detected based on current filters."
+    )
 
 else:
 
-    for _, row in df_filtered.iterrows():
+    for item in filtered_data:
 
-        if row["Type"] == "CALL":
+        # ====================================================
+        # BULLISH CALL
+        # ====================================================
+
+        if item["type"] == "CALL":
 
             st.markdown(
                 f"""
-                <div class="call-box">
+                <div class="call-box bullish-alert">
 
-                <h3>🟢 {row["Ticker"]} — CALL BUYING DETECTED</h3>
+                    <h2>
+                        🟢 {item["ticker"]} —
+                        <span style="color:#00ff00 !important;">
+                        CALL
+                        </span>
+                        BUYING DETECTED
+                    </h2>
 
-                <p>
-                <b>Expiration:</b> {row["Expiration"].strftime("%b %d")}<br>
-                <b>Contracts:</b> {row["Contracts"]:,} CALLS<br>
-                <b>Strike:</b> ${row["Strike"]}<br>
-                <b>Premium:</b> ${row["Premium"]:,.0f}<br>
-                <b>Type:</b> {row["Flow"]}<br>
-                <b>Signal:</b> 🟢 Bullish Institutional Flow
-                </p>
+                    <p>
+                        <b>Expiration:</b>
+                        {item["expiration"]}
+                    </p>
+
+                    <p>
+                        <b>Contracts:</b>
+                        {item["contracts"]:,}
+                        <span style="color:#00ff00 !important;">
+                        CALLS
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Strike:</b>
+                        ${item["strike"]}
+                    </p>
+
+                    <p>
+                        <b>Premium:</b>
+                        ${item["premium"]:,.0f}
+                    </p>
+
+                    <p>
+                        <b>Type:</b>
+                        Aggressive Buy
+                    </p>
+
+                    <p>
+                        <b>Signal:</b>
+                        <span style="color:#00ff00 !important;">
+                        🟢 {item["signal"]}
+                        </span>
+                    </p>
 
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-        else:
+
+        # ====================================================
+        # BEARISH PUT
+        # ====================================================
+
+        elif item["type"] == "PUT":
 
             st.markdown(
                 f"""
-                <div class="put-box">
+                <div class="put-box bearish-alert">
 
-                <h3>🔴 {row["Ticker"]} — PUT BUYING DETECTED</h3>
+                    <h2>
+                        🔴 {item["ticker"]} —
+                        <span style="color:#ff0000 !important;">
+                        PUT
+                        </span>
+                        BUYING DETECTED
+                    </h2>
 
-                <p>
-                <b>Expiration:</b> {row["Expiration"].strftime("%b %d")}<br>
-                <b>Contracts:</b> {row["Contracts"]:,} PUTS<br>
-                <b>Strike:</b> ${row["Strike"]}<br>
-                <b>Premium:</b> ${row["Premium"]:,.0f}<br>
-                <b>Type:</b> {row["Flow"]}<br>
-                <b>Signal:</b> 🔴 Bearish Institutional Flow
-                </p>
+                    <p>
+                        <b>Expiration:</b>
+                        {item["expiration"]}
+                    </p>
+
+                    <p>
+                        <b>Contracts:</b>
+                        {item["contracts"]:,}
+                        <span style="color:#ff0000 !important;">
+                        PUTS
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Strike:</b>
+                        ${item["strike"]}
+                    </p>
+
+                    <p>
+                        <b>Premium:</b>
+                        ${item["premium"]:,.0f}
+                    </p>
+
+                    <p>
+                        <b>Type:</b>
+                        Aggressive Buy
+                    </p>
+
+                    <p>
+                        <b>Signal:</b>
+                        <span style="color:#ff0000 !important;">
+                        🔴 {item["signal"]}
+                        </span>
+                    </p>
 
                 </div>
                 """,
@@ -390,62 +515,13 @@ else:
             )
 
 
-# ------------------------------------------------------------
-# DATA TABLE
-# ------------------------------------------------------------
-
-st.divider()
-
-st.subheader("📊 Smart Money Flow Table")
-
-display_df = df_filtered.copy()
-
-display_df["Premium"] = display_df["Premium"].apply(
-    lambda x: f"${x:,.0f}"
-)
-
-display_df["Expiration"] = display_df["Expiration"].apply(
-    lambda x: x.strftime("%Y-%m-%d")
-)
-
-st.dataframe(
-    display_df,
-    use_container_width=True,
-    hide_index=True
-)
-
-
-# ------------------------------------------------------------
-# MARKET SENTIMENT
-# ------------------------------------------------------------
-
-st.divider()
-
-st.subheader("🧠 Institutional Sentiment")
-
-if call_premium > put_premium:
-    st.success(
-        "🟢 MARKET FLOW BIAS: BULLISH — Institutional CALL premium is dominating."
-    )
-
-elif put_premium > call_premium:
-    st.error(
-        "🔴 MARKET FLOW BIAS: BEARISH — Institutional PUT premium is dominating."
-    )
-
-else:
-    st.info(
-        "🟡 MARKET FLOW BIAS: NEUTRAL — CALL and PUT flow is balanced."
-    )
-
-
-# ------------------------------------------------------------
+# ============================================================
 # FOOTER
-# ------------------------------------------------------------
+# ============================================================
 
 st.divider()
 
 st.caption(
-    "LK Institutional Options Flow Scanner v1.0 | "
-    "Smart Money Detection Dashboard | Demo Version"
+    "LK Institutional Options Flow Scanner • "
+    "Smart Money Detection Dashboard"
 )
