@@ -61,7 +61,43 @@ st.markdown("""
         font-size: 22px;
         font-weight: bold;
     }
+.metric-value {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
 
+
+/* BULLISH - CALL */
+.bullish-alert, .bullish-card {
+    color: #FFFFFF !important;
+}
+
+.bullish-alert h1, .bullish-alert h2, .bullish-alert h3,
+.bullish-card h1, .bullish-card h2, .bullish-card h3 {
+    color: #00ff00 !important;
+}
+
+.bullish-alert p, .bullish-alert div, .bullish-alert span,
+.bullish-card p, .bullish-card div, .bullish-card span {
+    color: #FFFFFF !important;
+}
+
+
+/* BEARISH - PUT */
+.bearish-alert, .bearish-card {
+    color: #FFFFFF !important;
+}
+
+.bearish-alert h1, .bearish-alert h2, .bearish-alert h3,
+.bearish-card h1, .bearish-card h2, .bearish-card h3 {
+    color: #ff0000 !important;
+}
+
+.bearish-alert p, .bearish-alert div, .bearish-alert span,
+.bearish-card p, .bearish-card div, .bearish-card span {
+    color: #FFFFFF !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
