@@ -1,3 +1,7 @@
+import streamlit as st
+import pandas as pd
+import html
+import textwrap
 def create_flow_card(trade):
 
     ticker = html.escape(str(trade["ticker"]))
