@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+
 # =========================================================
 # PAGE CONFIG
 # =========================================================
@@ -20,10 +21,15 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+/* MAIN APP */
+
 .stApp {
     background-color: #151d2b;
     color: #e8edf5;
 }
+
+
+/* HIDE STREAMLIT DEFAULT ELEMENTS */
 
 #MainMenu {
     visibility: hidden;
@@ -74,27 +80,26 @@ header {
 }
 
 
-/* METRICS */
+/* METRIC CARDS */
 
-.metric-card {
+[data-testid="stMetric"] {
     background: #222d3d;
     border: 1px solid #35445a;
     border-radius: 16px;
-    padding: 22px;
+    padding: 20px;
     min-height: 115px;
 }
 
-.metric-label {
-    color: #aeb7c5;
-    font-size: 14px;
-    font-weight: 600;
+[data-testid="stMetricLabel"] {
+    color: #aeb7c5 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
 }
 
-.metric-value {
-    color: #f3f5f8;
-    font-size: 32px;
-    font-weight: 800;
-    margin-top: 8px;
+[data-testid="stMetricValue"] {
+    color: #f3f5f8 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
 }
 
 
@@ -107,7 +112,7 @@ header {
 }
 
 
-/* FLOW CARD CONTAINER */
+/* FLOW CARD */
 
 [data-testid="stVerticalBlockBorderWrapper"] {
     border-radius: 18px;
@@ -322,6 +327,7 @@ selected_tickers = st.sidebar.multiselect(
     default=all_tickers
 )
 
+
 min_contracts = st.sidebar.slider(
     "Minimum Contracts",
     min_value=0,
@@ -329,6 +335,7 @@ min_contracts = st.sidebar.slider(
     value=1000,
     step=100
 )
+
 
 min_premium = st.sidebar.slider(
     "Minimum Premium ($)",
@@ -338,14 +345,18 @@ min_premium = st.sidebar.slider(
     step=50000
 )
 
+
 flow_type = st.sidebar.radio(
     "Flow Type",
     ["All", "CALLS", "PUTS"]
 )
 
+
 st.sidebar.markdown("---")
 
-scan_button = st.sidebar.button("🔍 Scan Institutional Flow")
+scan_button = st.sidebar.button(
+    "🔍 Scan Institutional Flow"
+)
 
 
 # =========================================================
@@ -354,24 +365,30 @@ scan_button = st.sidebar.button("🔍 Scan Institutional Flow")
 
 filtered_df = df.copy()
 
+
 if selected_tickers:
+
     filtered_df = filtered_df[
         filtered_df["ticker"].isin(selected_tickers)
     ]
+
 
 filtered_df = filtered_df[
     filtered_df["contracts"] >= min_contracts
 ]
 
+
 filtered_df = filtered_df[
     filtered_df["premium"] >= min_premium
 ]
+
 
 if flow_type == "CALLS":
 
     filtered_df = filtered_df[
         filtered_df["direction"] == "CALL"
     ]
+
 
 elif flow_type == "PUTS":
 
@@ -390,15 +407,15 @@ filtered_df = filtered_df.sort_values(
 # HEADER
 # =========================================================
 
-st.markdown("""
-<div class="main-title">
-📊 LK Institutional Options Flow Scanner
-</div>
+st.markdown(
+    '<div class="main-title">📊 LK Institutional Options Flow Scanner</div>',
+    unsafe_allow_html=True
+)
 
-<div class="subtitle">
-Smart Money Detection • Institutional Options Activity • High Conviction Flow Analysis
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    '<div class="subtitle">Smart Money Detection • Institutional Options Activity • High Conviction Flow Analysis</div>',
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
@@ -424,16 +441,19 @@ bullish_count = len(
     ]
 )
 
+
 bearish_count = len(
     filtered_df[
         filtered_df["direction"] == "PUT"
     ]
 )
 
+
 call_premium = filtered_df.loc[
     filtered_df["direction"] == "CALL",
     "premium"
 ].sum()
+
 
 put_premium = filtered_df.loc[
     filtered_df["direction"] == "PUT",
@@ -441,67 +461,40 @@ put_premium = filtered_df.loc[
 ].sum()
 
 
+# =========================================================
+# NATIVE STREAMLIT METRIC CARDS
+# FIXED VERSION - NO HTML RENDERING PROBLEM
+# =========================================================
+
 col1, col2, col3, col4 = st.columns(4)
 
 
 with col1:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            🟢 BULLISH CALL FLOW
-        </div>
-
-        <div class="metric-value">
-            {bullish_count}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.metric(
+        label="🟢 BULLISH CALL FLOW",
+        value=bullish_count
+    )
 
 
 with col2:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            🔴 BEARISH PUT FLOW
-        </div>
-
-        <div class="metric-value">
-            {bearish_count}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.metric(
+        label="🔴 BEARISH PUT FLOW",
+        value=bearish_count
+    )
 
 
 with col3:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            💰 CALL PREMIUM
-        </div>
-
-        <div class="metric-value">
-            ${call_premium:,.0f}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.metric(
+        label="💰 CALL PREMIUM",
+        value=f"${call_premium:,.0f}"
+    )
 
 
 with col4:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            💰 PUT PREMIUM
-        </div>
-
-        <div class="metric-value">
-            ${put_premium:,.0f}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.metric(
+        label="💰 PUT PREMIUM",
+        value=f"${put_premium:,.0f}"
+    )
 
 
 # =========================================================
@@ -550,13 +543,16 @@ display_df["Direction"] = display_df["Direction"].apply(
     lambda x: "🟢 CALL" if x == "CALL" else "🔴 PUT"
 )
 
+
 display_df["Premium"] = display_df["Premium"].apply(
     lambda x: f"${x:,.0f}"
 )
 
+
 display_df["Volume Ratio"] = display_df["Volume Ratio"].apply(
     lambda x: f"{x:.1f}x"
 )
+
 
 display_df["Score"] = display_df["Score"].apply(
     lambda x: f"{x}/100"
@@ -611,63 +607,67 @@ def display_flow_card(trade):
     direction = trade["direction"]
     score = int(trade["score"])
 
+
     if direction == "CALL":
 
         border_color = "#58d69b"
-        background_color = "#173d30"
         direction_icon = "🟢"
         direction_color = "#62d69d"
 
     else:
 
         border_color = "#ff5964"
-        background_color = "#4b282d"
         direction_icon = "🔴"
         direction_color = "#ff737d"
 
 
-    # Native Streamlit container
+    # =====================================================
+    # FLOW CARD CONTAINER
+    # =====================================================
+
     with st.container(border=True):
 
-        # Header
+
+        # =================================================
+        # CARD HEADER
+        # =================================================
+
         col_title, col_confidence = st.columns([3, 1])
+
 
         with col_title:
 
             st.markdown(
-                f"""
-                ### {direction_icon} {trade["ticker"]} — 
-                <span style="color:{direction_color};">
-                {direction}
-                </span>
+                f"## {direction_icon} {trade['ticker']} —"
+            )
 
-                <br>
-
-                <span style="font-size:15px; color:#aeb7c5;">
-                BUYING DETECTED
-                </span>
-                """,
+            st.markdown(
+                f'<span style="color:{direction_color}; font-weight:700;">{direction}</span>',
                 unsafe_allow_html=True
             )
 
+            st.caption("BUYING DETECTED")
+
+
         with col_confidence:
 
-            st.markdown("")
+            confidence = get_confidence(score)
 
             st.markdown(
                 f"""
-                <div style="
-                    padding:10px;
-                    border-radius:10px;
-                    text-align:center;
-                    font-weight:700;
-                    color:{direction_color};
-                    border:1px solid {border_color};
-                    background:rgba(255,255,255,0.04);
-                ">
-                    {get_confidence(score)}
-                </div>
-                """,
+<div style="
+padding:10px;
+border-radius:10px;
+text-align:center;
+font-weight:700;
+color:{direction_color};
+border:1px solid {border_color};
+background:rgba(255,255,255,0.04);
+margin-top:10px;
+">
+{confidence}
+</div>
+""",
                 unsafe_allow_html=True
             )
 
@@ -675,30 +675,34 @@ def display_flow_card(trade):
         st.markdown("---")
 
 
+        # =================================================
         # ROW 1
+        # =================================================
+
         c1, c2, c3 = st.columns(3)
+
 
         with c1:
             st.caption("Institutional Activity")
-            st.markdown(
-                f"**{trade['activity']}**"
-            )
+            st.markdown(f"**{trade['activity']}**")
+
 
         with c2:
             st.caption("Institutional Score")
-            st.markdown(
-                f"**{score}/100**"
-            )
+            st.markdown(f"**{score}/100**")
+
 
         with c3:
             st.caption("Expiration")
-            st.markdown(
-                f"**{trade['expiration']}**"
-            )
+            st.markdown(f"**{trade['expiration']}**")
 
 
+        # =================================================
         # ROW 2
+        # =================================================
+
         c4, c5, c6 = st.columns(3)
+
 
         with c4:
             st.caption("Contracts")
@@ -706,11 +710,13 @@ def display_flow_card(trade):
                 f"**{trade['contracts']:,} {direction}S**"
             )
 
+
         with c5:
             st.caption("Strike")
             st.markdown(
                 f"**${trade['strike']:,.0f}**"
             )
+
 
         with c6:
             st.caption("Premium")
@@ -719,8 +725,12 @@ def display_flow_card(trade):
             )
 
 
+        # =================================================
         # ROW 3
+        # =================================================
+
         c7, c8, c9 = st.columns(3)
+
 
         with c7:
             st.caption("Volume vs Average")
@@ -728,13 +738,16 @@ def display_flow_card(trade):
                 f"**{trade['volume_ratio']:.1f}x**"
             )
 
+
         with c8:
             st.caption("Unusual Volume")
             st.markdown(
                 f"**{trade['unusual_volume']}**"
             )
 
+
         with c9:
+
             st.caption("Sweep Detected")
 
             if trade["sweep"] == "YES":
@@ -743,10 +756,15 @@ def display_flow_card(trade):
                 st.markdown("**NO**")
 
 
+        # =================================================
         # ROW 4
+        # =================================================
+
         c10, c11, c12 = st.columns(3)
 
+
         with c10:
+
             st.caption("Block Trade")
 
             if trade["block_trade"] == "YES":
@@ -754,14 +772,20 @@ def display_flow_card(trade):
             else:
                 st.markdown("**NO**")
 
+
         with c11:
+
             st.caption("Transaction")
+
             st.markdown(
                 f"**{trade['transaction']}**"
             )
 
+
         with c12:
+
             st.caption("Signal")
+
             st.markdown(
                 f"**{direction_icon} {trade['signal']}**"
             )
@@ -769,16 +793,21 @@ def display_flow_card(trade):
 
         st.markdown("---")
 
+
+        # =================================================
+        # FINAL SIGNAL
+        # =================================================
+
         st.markdown(
             f"""
-            **Institutional Smart Money Signal:**
-            <span style="
-                color:{direction_color};
-                font-weight:700;
-            ">
-            {trade['signal']}
-            </span>
-            """,
+Institutional Smart Money Signal:
+<span style="
+color:{direction_color};
+font-weight:700;
+">
+{trade['signal']}
+</span>
+""",
             unsafe_allow_html=True
         )
 
@@ -823,6 +852,7 @@ remaining_trades = filtered_df.iloc[1:]
 
 for index in range(0, len(remaining_trades), 2):
 
+
     col_left, col_right = st.columns(2)
 
 
@@ -846,14 +876,17 @@ for index in range(0, len(remaining_trades), 2):
 # FOOTER
 # =========================================================
 
-st.markdown("""
+st.markdown(
+    """
 <div style="
-    text-align:center;
-    color:#718096;
-    padding:30px;
-    font-size:14px;
+text-align:center;
+color:#718096;
+padding:30px;
+font-size:14px;
 ">
-    LK Institutional Options Flow Scanner
-    • Smart Money Detection Engine
+LK Institutional Options Flow Scanner
+• Smart Money Detection Engine
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
