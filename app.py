@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import textwrap
 
 # ============================================================
 # LK INSTITUTIONAL OPTIONS FLOW SCANNER v2.1
@@ -26,12 +26,12 @@ st.markdown("""
    ============================================================ */
 
 .stApp {
-    background-color: #11151F;
-    color: #E8E8E8;
+    background-color: #111722;
+    color: #E8EDF5;
 }
 
 .main {
-    background-color: #11151F;
+    background-color: #111722;
 }
 
 
@@ -42,14 +42,47 @@ st.markdown("""
 .main-title {
     font-size: 42px;
     font-weight: 800;
-    color: #F1F1F1;
+    color: #F1F3F6;
     margin-bottom: 5px;
 }
 
 .subtitle {
     font-size: 18px;
-    color: #A9AFB8;
+    color: #A9B2C1;
     margin-bottom: 25px;
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+section[data-testid="stSidebar"] {
+    background-color: #202A38;
+}
+
+section[data-testid="stSidebar"] * {
+    color: #E8EDF5;
+}
+
+
+/* ============================================================
+   METRICS
+   ============================================================ */
+
+[data-testid="stMetric"] {
+    background-color: #1D2635;
+    border: 1px solid #324155;
+    padding: 18px;
+    border-radius: 14px;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #AAB4C2 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #F1F3F6 !important;
 }
 
 
@@ -60,39 +93,9 @@ st.markdown("""
 .section-title {
     font-size: 32px;
     font-weight: 800;
-    color: #F0F0F0;
-    margin-top: 20px;
+    color: #F0F3F7;
+    margin-top: 25px;
     margin-bottom: 20px;
-}
-
-
-/* ============================================================
-   METRICS
-   ============================================================ */
-
-[data-testid="stMetric"] {
-    background-color: #191F2B;
-    border: 1px solid #2A3342;
-    padding: 18px;
-    border-radius: 12px;
-}
-
-
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
-
-section[data-testid="stSidebar"] {
-    background-color: #171C26;
-}
-
-
-/* ============================================================
-   DIVIDER
-   ============================================================ */
-
-hr {
-    border-color: #2A3342 !important;
 }
 
 
@@ -107,86 +110,56 @@ hr {
 
 
 /* ============================================================
-   COMPACT ALERT CARDS
+   DIVIDER
+   ============================================================ */
+
+hr {
+    border-color: #303B4B !important;
+}
+
+
+/* ============================================================
+   FLOW CARDS
    ============================================================ */
 
 .flow-card {
-    padding: 22px;
+    padding: 28px;
     border-radius: 16px;
     margin-bottom: 20px;
-    border: 1px solid #2A3342;
-    min-height: 370px;
+    min-height: 430px;
 }
 
-.call-flow-card {
-    background: linear-gradient(
-        135deg,
-        #173D2D,
-        #123125
-    );
-    border-left: 5px solid #20E68A;
+.call-card {
+    background-color: #173B2D;
+    border-left: 6px solid #45D995;
 }
 
-.put-flow-card {
-    background: linear-gradient(
-        135deg,
-        #4A252B,
-        #351B20
-    );
-    border-left: 5px solid #FF3B57;
+.put-card {
+    background-color: #4A272C;
+    border-left: 6px solid #FF5268;
 }
 
 
 /* ============================================================
-   CARD HEADER
+   FLOW CARD HEADER
    ============================================================ */
 
 .flow-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    margin-bottom: 18px;
+    margin-bottom: 25px;
 }
 
 .flow-title {
-    font-size: 25px;
+    font-size: 29px;
     font-weight: 800;
-    color: #F1F1F1;
+    color: #F1F3F6;
 }
 
 .call-highlight {
-    color: #32E89A;
+    color: #55E3A0;
 }
 
 .put-highlight {
-    color: #FF6075;
-}
-
-
-/* ============================================================
-   SCORE BADGE
-   ============================================================ */
-
-.score-call {
-    background-color: rgba(32,230,138,0.15);
-    color: #32E89A;
-    border: 1px solid #32E89A;
-    padding: 7px 12px;
-    border-radius: 10px;
-    font-weight: 800;
-    font-size: 16px;
-}
-
-.score-put {
-    background-color: rgba(255,59,87,0.15);
-    color: #FF6075;
-    border: 1px solid #FF6075;
-    padding: 7px 12px;
-    border-radius: 10px;
-    font-weight: 800;
-    font-size: 16px;
+    color: #FF6477;
 }
 
 
@@ -195,109 +168,104 @@ hr {
    ============================================================ */
 
 .confidence-call {
-    color: #32E89A;
-    font-weight: 800;
-    font-size: 15px;
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: rgba(69, 217, 149, 0.15);
+    color: #62E6AA;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .confidence-put {
-    color: #FF6075;
-    font-weight: 800;
-    font-size: 15px;
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: rgba(255, 82, 104, 0.15);
+    color: #FF7181;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 
 /* ============================================================
-   CARD GRID
+   SCORE
+   ============================================================ */
+
+.score-call {
+    margin-top: 12px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #55E3A0;
+}
+
+.score-put {
+    margin-top: 12px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #FF6477;
+}
+
+
+/* ============================================================
+   INFO GRID
    ============================================================ */
 
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    margin-top: 22px;
 }
 
 .info-box {
-    background-color: rgba(0,0,0,0.16);
-    padding: 11px;
+    background-color: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
+    padding: 14px;
 }
 
 .info-label {
-    font-size: 12px;
-    color: #A9AFB8;
-    margin-bottom: 4px;
+    font-size: 13px;
+    color: #AAB4C2;
+    margin-bottom: 6px;
 }
 
 .info-value {
     font-size: 16px;
     font-weight: 700;
-    color: #EDEDED;
-}
-
-
-/* ============================================================
-   SPECIAL VALUES
-   ============================================================ */
-
-.premium-value {
-    color: #FFD166;
-    font-weight: 800;
+    color: #F1F3F6;
 }
 
 .call-value {
-    color: #32E89A;
-    font-weight: 800;
+    color: #55E3A0;
 }
 
 .put-value {
-    color: #FF6075;
-    font-weight: 800;
+    color: #FF6477;
+}
+
+.warning-value {
+    color: #FFD166;
 }
 
 
 /* ============================================================
-   CARD FOOTER
+   RESPONSIVE
    ============================================================ */
 
-.card-footer {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255,255,255,0.12);
-}
+@media (max-width: 900px) {
 
-.signal-call {
-    color: #32E89A;
-    font-weight: 800;
-    font-size: 16px;
-}
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
 
-.signal-put {
-    color: #FF6075;
-    font-weight: 800;
-    font-size: 16px;
-}
+    .flow-title {
+        font-size: 24px;
+    }
 
-
-/* ============================================================
-   HIGHEST CONVICTION CARD
-   ============================================================ */
-
-.top-conviction-card {
-    padding: 25px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-}
-
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-
-.footer-text {
-    color: #7F8794;
-    text-align: center;
-    padding: 20px;
 }
 
 </style>
@@ -325,6 +293,7 @@ st.markdown(
 
 st.sidebar.markdown("## ⚙️ Scanner Controls")
 
+
 tickers = [
     "AAPL",
     "NVDA",
@@ -338,11 +307,13 @@ tickers = [
     "MSFT"
 ]
 
+
 selected_tickers = st.sidebar.multiselect(
     "Select Tickers",
     tickers,
     default=tickers
 )
+
 
 minimum_contracts = st.sidebar.slider(
     "Minimum Contracts",
@@ -352,6 +323,7 @@ minimum_contracts = st.sidebar.slider(
     step=100
 )
 
+
 minimum_premium = st.sidebar.slider(
     "Minimum Premium ($)",
     min_value=10000,
@@ -360,12 +332,15 @@ minimum_premium = st.sidebar.slider(
     step=50000
 )
 
+
 flow_type = st.sidebar.radio(
     "Flow Type",
     ["All", "CALLS", "PUTS"]
 )
 
+
 st.sidebar.divider()
+
 
 scan_button = st.sidebar.button(
     "🔍 Scan Institutional Flow",
@@ -481,60 +456,46 @@ def calculate_score(item):
 
     score = 0
 
-    # VOLUME RATIO
     ratio = item["volume_ratio"]
 
     if ratio >= 8:
         score += 35
-
     elif ratio >= 6:
         score += 30
-
     elif ratio >= 4:
         score += 25
-
     elif ratio >= 2:
         score += 15
-
     else:
         score += 5
 
 
-    # PREMIUM SIZE
     premium = item["premium"]
 
     if premium >= 3000000:
         score += 30
-
     elif premium >= 2000000:
         score += 25
-
     elif premium >= 1000000:
         score += 20
-
     elif premium >= 500000:
         score += 10
 
 
-    # SWEEP
     if item["sweep"] == "YES":
         score += 20
 
 
-    # BLOCK TRADE
     if item["block_trade"] == "YES":
         score += 20
 
 
-    # CONTRACT SIZE
     contracts = item["contracts"]
 
     if contracts >= 4000:
         score += 15
-
     elif contracts >= 2500:
         score += 10
-
     elif contracts >= 1000:
         score += 5
 
@@ -576,10 +537,8 @@ def calculate_signal(item):
 
         if score >= 75:
             return "Bullish Institutional Flow"
-
         elif score >= 50:
             return "Moderate Bullish Flow"
-
         else:
             return "Low Bullish Conviction"
 
@@ -587,16 +546,14 @@ def calculate_signal(item):
 
         if score >= 75:
             return "Bearish Institutional Flow"
-
         elif score >= 50:
             return "Moderate Bearish Flow"
-
         else:
             return "Low Bearish Conviction"
 
 
 # ============================================================
-# ADD SCORES TO DATA
+# ADD SCORES
 # ============================================================
 
 for item in sample_data:
@@ -615,6 +572,7 @@ for item in sample_data:
 # ============================================================
 
 filtered_data = []
+
 
 for item in sample_data:
 
@@ -640,21 +598,22 @@ for item in sample_data:
 # SUMMARY METRICS
 # ============================================================
 
-bullish_flows = len([
-    x for x in filtered_data
-    if x["type"] == "CALL"
-])
+bullish_flows = len(
+    [x for x in filtered_data if x["type"] == "CALL"]
+)
 
-bearish_flows = len([
-    x for x in filtered_data
-    if x["type"] == "PUT"
-])
+
+bearish_flows = len(
+    [x for x in filtered_data if x["type"] == "PUT"]
+)
+
 
 call_premium = sum(
     x["premium"]
     for x in filtered_data
     if x["type"] == "CALL"
 )
+
 
 put_premium = sum(
     x["premium"]
@@ -671,11 +630,13 @@ st.write("")
 
 col1, col2, col3, col4 = st.columns(4)
 
+
 with col1:
     st.metric(
         "🟢 BULLISH CALL FLOW",
         bullish_flows
     )
+
 
 with col2:
     st.metric(
@@ -683,11 +644,13 @@ with col2:
         bearish_flows
     )
 
+
 with col3:
     st.metric(
         "💰 CALL PREMIUM",
         f"${call_premium:,.0f}"
     )
+
 
 with col4:
     st.metric(
@@ -719,6 +682,7 @@ if len(filtered_data) > 0:
         reverse=True
     )
 
+
     for item in sorted_flows:
 
         direction = (
@@ -741,11 +705,13 @@ if len(filtered_data) > 0:
 
     ranking_df = pd.DataFrame(ranking_data)
 
+
     st.dataframe(
         ranking_df,
         use_container_width=True,
         hide_index=True
     )
+
 
 else:
 
@@ -758,293 +724,205 @@ st.divider()
 
 
 # ============================================================
-# FUNCTION TO CREATE COMPACT FLOW CARD
+# FUNCTION TO RENDER FLOW CARD
+# IMPORTANT: textwrap.dedent prevents HTML from rendering as text
 # ============================================================
 
-def create_flow_card(item, top_card=False):
+def render_flow_card(item):
 
-    ticker = item["ticker"]
-    option_type = item["type"]
-    score = item["score"]
-    confidence = item["confidence"]
-    activity = item["activity"]
-    expiration = item["expiration"]
-    contracts = item["contracts"]
-    strike = item["strike"]
-    premium = item["premium"]
-    volume_ratio = item["volume_ratio"]
-    unusual_volume = item["unusual_volume"]
-    sweep = item["sweep"]
-    block_trade = item["block_trade"]
-    transaction = item["transaction"]
-    signal = item["signal"]
+    is_call = item["type"] == "CALL"
 
+    if is_call:
 
-    # ========================================================
-    # CALL CARD
-    # ========================================================
-
-    if option_type == "CALL":
-
-        card_class = "call-flow-card"
-        score_class = "score-call"
+        card_class = "call-card"
+        highlight_class = "call-highlight"
         confidence_class = "confidence-call"
+        score_class = "score-call"
         value_class = "call-value"
-        signal_class = "signal-call"
 
-        icon = "🟢"
-
-        html = f"""
-<div class="flow-card {card_class}">
-
-    <div class="flow-card-header">
-
-        <div>
-            <div class="flow-title">
-                {icon} {ticker} —
-                <span class="call-highlight">CALL</span>
-            </div>
-
-            <div class="{confidence_class}">
-                {confidence}
-            </div>
-        </div>
-
-        <div class="{score_class}">
-            {score}/100
-        </div>
-
-    </div>
-
-
-    <div class="info-grid">
-
-        <div class="info-box">
-            <div class="info-label">Institutional Activity</div>
-            <div class="info-value {value_class}">
-                {activity}
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Premium</div>
-            <div class="info-value premium-value">
-                ${premium:,.0f}
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Expiration</div>
-            <div class="info-value">
-                {expiration}
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Strike</div>
-            <div class="info-value">
-                ${strike}
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Contracts</div>
-            <div class="info-value {value_class}">
-                {contracts:,} CALLS
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Volume vs Average</div>
-            <div class="info-value premium-value">
-                {volume_ratio:.1f}x
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Unusual Volume</div>
-            <div class="info-value premium-value">
-                {unusual_volume}
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Transaction</div>
-            <div class="info-value {value_class}">
-                {transaction}
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="card-footer">
-
-        <div class="info-grid">
-
-            <div>
-                <div class="info-label">Sweep</div>
-                <div class="info-value">
-                    {"⚡ YES" if sweep == "YES" else "NO"}
-                </div>
-            </div>
-
-            <div>
-                <div class="info-label">Block Trade</div>
-                <div class="info-value">
-                    {"🧱 YES" if block_trade == "YES" else "NO"}
-                </div>
-            </div>
-
-        </div>
-
-        <br>
-
-        <div class="{signal_class}">
-            🟢 {signal}
-        </div>
-
-    </div>
-
-</div>
-"""
-
-    # ========================================================
-    # PUT CARD
-    # ========================================================
+        direction_icon = "🟢"
+        direction_text = "CALL"
 
     else:
 
-        card_class = "put-flow-card"
-        score_class = "score-put"
+        card_class = "put-card"
+        highlight_class = "put-highlight"
         confidence_class = "confidence-put"
+        score_class = "score-put"
         value_class = "put-value"
-        signal_class = "signal-put"
 
-        icon = "🔴"
+        direction_icon = "🔴"
+        direction_text = "PUT"
 
-        html = f"""
-<div class="flow-card {card_class}">
 
-    <div class="flow-card-header">
+    sweep_display = (
+        "⚡ YES"
+        if item["sweep"] == "YES"
+        else "NO"
+    )
 
-        <div>
+
+    block_display = (
+        "🧱 YES"
+        if item["block_trade"] == "YES"
+        else "NO"
+    )
+
+
+    html = textwrap.dedent(f"""
+    <div class="flow-card {card_class}">
+
+        <div class="flow-card-header">
+
             <div class="flow-title">
-                {icon} {ticker} —
-                <span class="put-highlight">PUT</span>
+                {direction_icon} {item["ticker"]} —
+                <span class="{highlight_class}">
+                    {direction_text}
+                </span>
+                BUYING DETECTED
             </div>
 
             <div class="{confidence_class}">
-                {confidence}
+                {item["confidence"]}
             </div>
-        </div>
 
-        <div class="{score_class}">
-            {score}/100
-        </div>
-
-    </div>
-
-
-    <div class="info-grid">
-
-        <div class="info-box">
-            <div class="info-label">Institutional Activity</div>
-            <div class="info-value {value_class}">
-                {activity}
+            <div class="{score_class}">
+                Institutional Score: {item["score"]}/100
             </div>
+
         </div>
 
-        <div class="info-box">
-            <div class="info-label">Premium</div>
-            <div class="info-value premium-value">
-                ${premium:,.0f}
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Expiration</div>
-            <div class="info-value">
-                {expiration}
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Strike</div>
-            <div class="info-value">
-                ${strike}
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Contracts</div>
-            <div class="info-value {value_class}">
-                {contracts:,} PUTS
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Volume vs Average</div>
-            <div class="info-value premium-value">
-                {volume_ratio:.1f}x
-            </div>
-        </div>
-
-
-        <div class="info-box">
-            <div class="info-label">Unusual Volume</div>
-            <div class="info-value premium-value">
-                {unusual_volume}
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="info-label">Transaction</div>
-            <div class="info-value {value_class}">
-                {transaction}
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="card-footer">
 
         <div class="info-grid">
 
-            <div>
-                <div class="info-label">Sweep</div>
-                <div class="info-value">
-                    {"⚡ YES" if sweep == "YES" else "NO"}
+            <div class="info-box">
+                <div class="info-label">
+                    Institutional Activity
+                </div>
+                <div class="info-value {value_class}">
+                    {item["activity"]}
                 </div>
             </div>
 
-            <div>
-                <div class="info-label">Block Trade</div>
+
+            <div class="info-box">
+                <div class="info-label">
+                    Premium
+                </div>
                 <div class="info-value">
-                    {"🧱 YES" if block_trade == "YES" else "NO"}
+                    ${item["premium"]:,.0f}
                 </div>
             </div>
 
-        </div>
 
-        <br>
+            <div class="info-box">
+                <div class="info-label">
+                    Expiration
+                </div>
+                <div class="info-value">
+                    {item["expiration"]}
+                </div>
+            </div>
 
-        <div class="{signal_class}">
-            🔴 {signal}
+
+            <div class="info-box">
+                <div class="info-label">
+                    Contracts
+                </div>
+                <div class="info-value {value_class}">
+                    {item["contracts"]:,} {direction_text}S
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Strike
+                </div>
+                <div class="info-value">
+                    ${item["strike"]}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Volume vs Average
+                </div>
+                <div class="info-value warning-value">
+                    {item["volume_ratio"]:.1f}x
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Unusual Volume
+                </div>
+                <div class="info-value warning-value">
+                    {item["unusual_volume"]}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Sweep Detected
+                </div>
+                <div class="info-value">
+                    {sweep_display}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Block Trade
+                </div>
+                <div class="info-value">
+                    {block_display}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Transaction
+                </div>
+                <div class="info-value {value_class}">
+                    {item["transaction"]}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Signal
+                </div>
+                <div class="info-value {value_class}">
+                    {direction_icon} {item["signal"]}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Flow Type
+                </div>
+                <div class="info-value {value_class}">
+                    {direction_text}
+                </div>
+            </div>
+
         </div>
 
     </div>
+    """)
 
-</div>
-"""
-
-    return html
+    st.markdown(
+        html,
+        unsafe_allow_html=True
+    )
 
 
 # ============================================================
@@ -1053,20 +931,19 @@ def create_flow_card(item, top_card=False):
 
 if len(filtered_data) > 0:
 
-    top_trade = max(
-        filtered_data,
-        key=lambda x: x["score"]
-    )
-
     st.markdown(
         '<div class="section-title">🔥 Highest Conviction Institutional Trade</div>',
         unsafe_allow_html=True
     )
 
-    st.markdown(
-        create_flow_card(top_trade, top_card=True),
-        unsafe_allow_html=True
+
+    top_trade = max(
+        filtered_data,
+        key=lambda x: x["score"]
     )
+
+
+    render_flow_card(top_trade)
 
 
 st.divider()
@@ -1082,15 +959,12 @@ st.markdown(
 )
 
 
-# ============================================================
-# DISPLAY ALL ALERTS IN 2 COLUMNS
-# ============================================================
-
 if len(filtered_data) == 0:
 
     st.warning(
         "No institutional options flow detected based on current filters."
     )
+
 
 else:
 
@@ -1100,31 +974,21 @@ else:
         reverse=True
     )
 
-    # Create rows with 2 cards each
+
+    # Display cards in two columns
     for i in range(0, len(sorted_alerts), 2):
 
         col1, col2 = st.columns(2)
 
-        # LEFT CARD
+
         with col1:
-
-            if i < len(sorted_alerts):
-
-                st.markdown(
-                    create_flow_card(sorted_alerts[i]),
-                    unsafe_allow_html=True
-                )
+            render_flow_card(sorted_alerts[i])
 
 
-        # RIGHT CARD
-        with col2:
+        if i + 1 < len(sorted_alerts):
 
-            if i + 1 < len(sorted_alerts):
-
-                st.markdown(
-                    create_flow_card(sorted_alerts[i + 1]),
-                    unsafe_allow_html=True
-                )
+            with col2:
+                render_flow_card(sorted_alerts[i + 1])
 
 
 # ============================================================
@@ -1133,13 +997,9 @@ else:
 
 st.divider()
 
-st.markdown(
-    '''
-    <div class="footer-text">
-        LK Institutional Options Flow Scanner v2.1
-        <br>
-        Smart Money Detection Dashboard • Institutional Flow Analysis
-    </div>
-    ''',
-    unsafe_allow_html=True
+
+st.caption(
+    "LK Institutional Options Flow Scanner v2.1 • "
+    "Smart Money Detection Dashboard • "
+    "Institutional Flow Analysis"
 )
