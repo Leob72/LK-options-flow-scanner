@@ -1,135 +1,273 @@
 # =========================================================
-# FLOW CARD FUNCTION - CORREGIDA
+# CONFIDENCE FUNCTION
 # =========================================================
 
-def create_flow_card(trade):
+def get_confidence(score):
 
-    ticker = html.escape(str(trade["ticker"]))
-    direction = html.escape(str(trade["direction"]))
-    activity = html.escape(str(trade["activity"]))
-    expiration = html.escape(str(trade["expiration"]))
-    unusual_volume = html.escape(str(trade["unusual_volume"]))
-    transaction = html.escape(str(trade["transaction"]))
-    signal = html.escape(str(trade["signal"]))
+    if score >= 90:
+        return "🔥 EXTREME INSTITUTIONAL FLOW"
 
+    elif score >= 75:
+        return "🟢 HIGH CONVICTION"
+
+    elif score >= 50:
+        return "🟡 MODERATE CONVICTION"
+
+    elif score >= 30:
+        return "⚪ NEUTRAL FLOW"
+
+    else:
+        return "🔵 LOW CONVICTION"
+
+
+# =========================================================
+# NATIVE STREAMLIT FLOW CARD
+# =========================================================
+
+def display_flow_card(trade):
+
+    direction = str(trade["direction"])
     score = int(trade["score"])
-    contracts = int(trade["contracts"])
-    strike = float(trade["strike"])
-    premium = float(trade["premium"])
-    volume_ratio = float(trade["volume_ratio"])
 
     confidence = get_confidence(score)
 
     if direction == "CALL":
-
-        card_class = "flow-card call-card"
-        highlight_class = "call-highlight"
-        confidence_class = "confidence-call"
-        score_class = "score-call"
-        value_class = "call-value"
-
-        direction_html = '<span class="call-highlight">CALL</span>'
-        signal_icon = "🟢"
-
+        direction_icon = "🟢"
+        direction_color = "#62d69d"
+        border_color = "#58d69b"
+        card_bg = "#173d30"
+        signal_type = "BULLISH"
     else:
+        direction_icon = "🔴"
+        direction_color = "#ff737d"
+        border_color = "#ff5964"
+        card_bg = "#4b282d"
+        signal_type = "BEARISH"
 
-        card_class = "flow-card put-card"
-        highlight_class = "put-highlight"
-        confidence_class = "confidence-put"
-        score_class = "score-put"
-        value_class = "put-value"
+    # Card container
+    with st.container(border=True):
 
-        direction_html = '<span class="put-highlight">PUT</span>'
-        signal_icon = "🔴"
+        # HEADER
+        col_title, col_confidence = st.columns([3, 1])
 
-    sweep_icon = "⚡" if str(trade["sweep"]) == "YES" else ""
-    block_icon = "🧱" if str(trade["block_trade"]) == "YES" else ""
+        with col_title:
 
-    card_html = (
-        f'<div class="{card_class}">'
-        
-        f'<div class="flow-card-header">'
-        
-        f'<div class="flow-title">'
-        f'{signal_icon} {ticker} — {direction_html}'
-        f'<br>'
-        f'<span style="font-size:15px; color:#aeb7c5;">BUYING DETECTED</span>'
-        f'</div>'
-        
-        f'<span class="{confidence_class}">{confidence}</span>'
-        
-        f'</div>'
+            st.markdown(
+                f"""
+                <div style="
+                    font-size:28px;
+                    font-weight:800;
+                    color:#f4f5f7;
+                    padding-top:5px;
+                ">
+                    {direction_icon} {trade["ticker"]} —
+                    <span style="color:{direction_color};">
+                        {direction}
+                    </span>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        f'<div class="info-grid">'
+            st.caption("BUYING DETECTED")
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Institutional Activity</div>'
-        f'<div class="info-value {value_class}">{activity}</div>'
-        f'</div>'
+        with col_confidence:
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Institutional Score</div>'
-        f'<div class="info-value {score_class}">{score}/100</div>'
-        f'</div>'
+            st.markdown(
+                f"""
+                <div style="
+                    background:{card_bg};
+                    border:1px solid {border_color};
+                    color:{direction_color};
+                    padding:10px;
+                    border-radius:10px;
+                    text-align:center;
+                    font-weight:700;
+                    margin-top:8px;
+                ">
+                    {confidence}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Expiration</div>'
-        f'<div class="info-value">{expiration}</div>'
-        f'</div>'
+        st.divider()
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Contracts</div>'
-        f'<div class="info-value">{contracts:,} {direction}S</div>'
-        f'</div>'
+        # ROW 1
+        col1, col2, col3 = st.columns(3)
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Strike</div>'
-        f'<div class="info-value">${strike:,.0f}</div>'
-        f'</div>'
+        with col1:
+            st.metric(
+                "Institutional Activity",
+                trade["activity"]
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Premium</div>'
-        f'<div class="info-value gold-value">${premium:,.0f}</div>'
-        f'</div>'
+        with col2:
+            st.metric(
+                "Institutional Score",
+                f"{score}/100"
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Volume vs Average</div>'
-        f'<div class="info-value gold-value">{volume_ratio:.1f}x</div>'
-        f'</div>'
+        with col3:
+            st.metric(
+                "Expiration",
+                trade["expiration"]
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Unusual Volume</div>'
-        f'<div class="info-value gold-value">{unusual_volume}</div>'
-        f'</div>'
+        # ROW 2
+        col1, col2, col3 = st.columns(3)
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Sweep Detected</div>'
-        f'<div class="info-value">{sweep_icon} {html.escape(str(trade["sweep"]))}</div>'
-        f'</div>'
+        with col1:
+            st.metric(
+                "Contracts",
+                f"{int(trade['contracts']):,}"
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Block Trade</div>'
-        f'<div class="info-value">{block_icon} {html.escape(str(trade["block_trade"]))}</div>'
-        f'</div>'
+        with col2:
+            st.metric(
+                "Strike",
+                f"${float(trade['strike']):,.0f}"
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Transaction</div>'
-        f'<div class="info-value {value_class}">{transaction}</div>'
-        f'</div>'
+        with col3:
+            st.metric(
+                "Premium",
+                f"${float(trade['premium']):,.0f}"
+            )
 
-        f'<div class="info-box">'
-        f'<div class="info-label">Signal</div>'
-        f'<div class="info-value {value_class}">{signal_icon} {signal}</div>'
-        f'</div>'
+        # ROW 3
+        col1, col2, col3 = st.columns(3)
 
-        f'</div>'
+        with col1:
+            st.metric(
+                "Volume vs Average",
+                f"{float(trade['volume_ratio']):.1f}x"
+            )
 
-        f'<div class="signal-box">'
-        f'Institutional Smart Money Signal: '
-        f'<span class="{value_class}">{signal}</span>'
-        f'</div>'
+        with col2:
+            st.metric(
+                "Unusual Volume",
+                trade["unusual_volume"]
+            )
 
-        f'</div>'
-    )
+        with col3:
+            sweep_value = (
+                "⚡ YES"
+                if trade["sweep"] == "YES"
+                else "NO"
+            )
 
-    return card_html
+            st.metric(
+                "Sweep Detected",
+                sweep_value
+            )
+
+        # ROW 4
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            block_value = (
+                "🧱 YES"
+                if trade["block_trade"] == "YES"
+                else "NO"
+            )
+
+            st.metric(
+                "Block Trade",
+                block_value
+            )
+
+        with col2:
+            st.metric(
+                "Transaction",
+                trade["transaction"]
+            )
+
+        with col3:
+            st.metric(
+                "Signal Type",
+                signal_type
+            )
+
+        st.divider()
+
+        # FINAL SIGNAL
+        st.markdown(
+            f"""
+            <div style="
+                font-size:18px;
+                font-weight:700;
+                padding:12px;
+                border-radius:8px;
+                background:{card_bg};
+                border-left:4px solid {border_color};
+                color:#f1f3f7;
+            ">
+                Institutional Smart Money Signal:
+                <span style="color:{direction_color};">
+                    {trade["signal"]}
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.write("")
+
+
+# =========================================================
+# DISPLAY HIGHEST CONVICTION TRADE
+# =========================================================
+
+display_flow_card(highest_trade)
+
+
+# =========================================================
+# DIVIDER
+# =========================================================
+
+st.markdown(
+    '<div class="custom-divider"></div>',
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# INSTITUTIONAL OPTIONS FLOW ALERTS
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">🚨 Institutional Options Flow Alerts</div>',
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# DISPLAY REMAINING TRADES
+# =========================================================
+
+remaining_trades = filtered_df.iloc[1:]
+
+for _, trade in remaining_trades.iterrows():
+
+    display_flow_card(trade)
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown(
+    """
+    <div style="
+        text-align:center;
+        color:#718096;
+        padding:30px;
+        font-size:14px;
+    ">
+        LK Institutional Options Flow Scanner
+        • Smart Money Detection Engine
+    </div>
+    """,
+    unsafe_allow_html=True
+)
