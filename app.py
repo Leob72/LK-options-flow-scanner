@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 
 # ============================================================
-# LK INSTITUTIONAL OPTIONS FLOW SCANNER v3.0
-# SMART MONEY INTELLIGENCE ENGINE
+# LK INSTITUTIONAL OPTIONS FLOW SCANNER v2.0
+# Smart Money Detection Dashboard
 # ============================================================
 
 st.set_page_config(
@@ -12,6 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
+
 # ============================================================
 # CUSTOM CSS
 # ============================================================
@@ -19,167 +20,179 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* MAIN APP */
+/* ============================================================
+   MAIN APP
+   ============================================================ */
+
 .stApp {
-    background-color: #11151D;
+    background-color: #11151F;
     color: #E8E8E8;
 }
 
-/* MAIN CONTENT */
 .main {
-    background-color: #11151D;
+    background-color: #11151F;
 }
 
-/* TITLE */
-.title {
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.main-title {
     font-size: 42px;
     font-weight: 800;
-    color: #F2F2F2;
-    margin-bottom: 0px;
+    color: #F1F1F1;
+    margin-bottom: 5px;
 }
 
 .subtitle {
-    font-size: 17px;
-    color: #9AA4B2;
+    font-size: 18px;
+    color: #A9AFB8;
     margin-bottom: 25px;
 }
 
-/* SECTION TITLES */
-.section-title {
-    font-size: 30px;
-    font-weight: 750;
+
+/* ============================================================
+   ALERT CARDS
+   ============================================================ */
+
+.alert-card {
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    color: #EAEAEA;
+}
+
+.call-card {
+    background-color: #163D2C;
+    border-left: 7px solid #20E68A;
+}
+
+.put-card {
+    background-color: #482126;
+    border-left: 7px solid #FF3B57;
+}
+
+
+/* ============================================================
+   CARD TITLE
+   ============================================================ */
+
+.card-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 25px;
     color: #F2F2F2;
-    margin-top: 20px;
-    margin-bottom: 18px;
 }
 
-/* PRIORITY ALERT */
-.priority-bullish {
-    background: linear-gradient(90deg, #123D2A, #183F30);
-    border-left: 7px solid #00E676;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 25px;
+.call-text {
+    color: #32E89A !important;
 }
 
-.priority-bearish {
-    background: linear-gradient(90deg, #421C24, #4A2028);
-    border-left: 7px solid #FF1744;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 25px;
+.put-text {
+    color: #FF4560 !important;
 }
 
-/* CALL ALERT BOX */
-.call-box {
-    background-color: #153D2B;
-    border-left: 7px solid #00E676;
-    padding: 26px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    color: #E8E8E8 !important;
+
+/* ============================================================
+   CARD TEXT
+   ============================================================ */
+
+.card-line {
+    font-size: 19px;
+    font-weight: 500;
+    margin: 13px 0;
+    color: #D8D8D8;
 }
 
-/* PUT ALERT BOX */
-.put-box {
-    background-color: #482127;
-    border-left: 7px solid #FF1744;
-    padding: 26px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    color: #E8E8E8 !important;
-}
-
-/* CARD HEADERS */
-.call-box h2,
-.put-box h2,
-.priority-bullish h2,
-.priority-bearish h2 {
-    color: #F2F2F2 !important;
-    font-size: 32px !important;
-    margin-bottom: 20px !important;
-}
-
-/* TEXT */
-.call-box p,
-.put-box p,
-.priority-bullish p,
-.priority-bearish p {
-    color: #D8D8D8 !important;
-    font-size: 18px;
-    margin-bottom: 13px;
-}
-
-/* BULLISH TEXT */
-.bullish {
-    color: #39E58C !important;
-    font-weight: 750;
-}
-
-/* BEARISH TEXT */
-.bearish {
-    color: #FF4562 !important;
-    font-weight: 750;
-}
-
-/* GOLD TEXT */
-.gold {
-    color: #FFD54A !important;
-    font-weight: 750;
-}
-
-/* WHITE BOLD */
 .label {
-    color: #E8E8E8 !important;
-    font-weight: 700;
+    font-weight: 750;
+    color: #E5E5E5;
 }
 
-/* SUMMARY BOX */
-.summary-box {
-    background-color: #1A202B;
-    border: 1px solid #303A48;
-    border-radius: 12px;
-    padding: 25px;
-    margin-top: 15px;
+.bullish {
+    color: #32E89A !important;
+    font-weight: 800;
+}
+
+.bearish {
+    color: #FF4560 !important;
+    font-weight: 800;
+}
+
+.warning-text {
+    color: #FFD54A !important;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   SECTION TITLES
+   ============================================================ */
+
+.section-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #F0F0F0;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.summary-box p {
-    color: #D8D8D8 !important;
-    font-size: 18px;
-    line-height: 1.6;
+
+/* ============================================================
+   HIGHEST CONVICTION CARD
+   ============================================================ */
+
+.conviction-container {
+    padding: 8px;
+    border-radius: 18px;
+    margin-bottom: 30px;
 }
 
-/* RANKING TABLE */
+.conviction-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   METRICS
+   ============================================================ */
+
+[data-testid="stMetric"] {
+    background-color: #191F2B;
+    border: 1px solid #2A3342;
+    padding: 18px;
+    border-radius: 12px;
+}
+
+
+/* ============================================================
+   DATAFRAME
+   ============================================================ */
+
 [data-testid="stDataFrame"] {
     border-radius: 12px;
     overflow: hidden;
 }
 
-/* SIDEBAR */
-section[data-testid="stSidebar"] {
-    background-color: #171C25;
-}
 
-/* METRICS */
-[data-testid="stMetric"] {
-    background-color: #1A202B;
-    border: 1px solid #2D3745;
-    padding: 15px;
-    border-radius: 10px;
-}
+/* ============================================================
+   DIVIDER
+   ============================================================ */
 
-/* DIVIDER */
 hr {
-    border-color: #2D3745 !important;
+    border-color: #2A3342 !important;
 }
 
-/* FOOTER */
-.footer {
-    color: #7F8A99;
-    text-align: center;
-    padding: 20px;
-    font-size: 14px;
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+section[data-testid="stSidebar"] {
+    background-color: #171C26;
 }
 
 </style>
@@ -191,16 +204,14 @@ hr {
 # ============================================================
 
 st.markdown(
-    '<div class="title">📊 LK Institutional Options Flow Scanner</div>',
+    '<div class="main-title">📊 LK Institutional Options Flow Scanner</div>',
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<div class="subtitle">Smart Money Intelligence Engine • Institutional Options Activity Analysis</div>',
+    '<div class="subtitle">Smart Money Detection • Institutional Options Activity • High Conviction Flow Analysis</div>',
     unsafe_allow_html=True
 )
-
-st.divider()
 
 
 # ============================================================
@@ -259,86 +270,98 @@ scan_button = st.sidebar.button(
 
 # ============================================================
 # SAMPLE DATA
-# FUTURE: REPLACE WITH REAL API DATA
+# FUTURE: CONNECT TO REAL OPTIONS FLOW API
 # ============================================================
 
 sample_data = [
 
     {
-        "ticker": "AAPL",
+        "ticker": "META",
         "type": "CALL",
-        "expiration": "Sep 10",
-        "contracts": 2500,
-        "strike": 325,
-        "premium": 1800000,
-        "volume_ratio": 5.6,
-        "sweep": True,
-        "block_trade": False,
+        "activity": "SWEEP",
+        "expiration": "Sep 13",
+        "contracts": 3600,
+        "strike": 750,
+        "premium": 3900000,
+        "volume_ratio": 9.0,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
         "transaction": "Aggressive Buy"
     },
 
     {
         "ticker": "NVDA",
         "type": "PUT",
+        "activity": "BLOCK TRADE",
         "expiration": "Sep 13",
         "contracts": 4200,
         "strike": 175,
         "premium": 3200000,
         "volume_ratio": 7.0,
-        "sweep": False,
-        "block_trade": True,
+        "unusual_volume": "EXTREME",
+        "sweep": "NO",
+        "block_trade": "YES",
         "transaction": "Aggressive Sell"
-    },
-
-    {
-        "ticker": "TSLA",
-        "type": "CALL",
-        "expiration": "Sep 13",
-        "contracts": 1800,
-        "strike": 350,
-        "premium": 1450000,
-        "volume_ratio": 2.0,
-        "sweep": False,
-        "block_trade": False,
-        "transaction": "Aggressive Buy"
     },
 
     {
         "ticker": "QQQ",
         "type": "PUT",
+        "activity": "SWEEP",
         "expiration": "Sep 10",
         "contracts": 3100,
         "strike": 580,
         "premium": 2200000,
         "volume_ratio": 6.2,
-        "sweep": True,
-        "block_trade": False,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
         "transaction": "Aggressive Sell"
     },
 
     {
-        "ticker": "META",
+        "ticker": "AAPL",
         "type": "CALL",
+        "activity": "SWEEP",
+        "expiration": "Sep 10",
+        "contracts": 2500,
+        "strike": 325,
+        "premium": 1800000,
+        "volume_ratio": 5.6,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
+        "transaction": "Aggressive Buy"
+    },
+
+    {
+        "ticker": "TSLA",
+        "type": "CALL",
+        "activity": "STANDARD FLOW",
         "expiration": "Sep 13",
-        "contracts": 3600,
-        "strike": 750,
-        "premium": 3900000,
-        "volume_ratio": 9.0,
-        "sweep": True,
-        "block_trade": False,
+        "contracts": 1800,
+        "strike": 350,
+        "premium": 1450000,
+        "volume_ratio": 2.0,
+        "unusual_volume": "MODERATE",
+        "sweep": "NO",
+        "block_trade": "NO",
         "transaction": "Aggressive Buy"
     },
 
     {
         "ticker": "PLTR",
         "type": "CALL",
+        "activity": "STANDARD FLOW",
         "expiration": "Sep 20",
         "contracts": 1100,
         "strike": 200,
         "premium": 650000,
         "volume_ratio": 1.4,
-        "sweep": False,
-        "block_trade": False,
+        "unusual_volume": "NORMAL",
+        "sweep": "NO",
+        "block_trade": "NO",
         "transaction": "Neutral"
     }
 
@@ -346,99 +369,96 @@ sample_data = [
 
 
 # ============================================================
-# INSTITUTIONAL SCORE ENGINE
+# INSTITUTIONAL SCORE CALCULATION
 # ============================================================
 
-def calculate_institutional_score(item):
+def calculate_score(item):
 
     score = 0
 
     # --------------------------------------------------------
-    # PREMIUM SCORE - MAX 30
+    # VOLUME RATIO
+    # --------------------------------------------------------
+
+    ratio = item["volume_ratio"]
+
+    if ratio >= 8:
+        score += 35
+
+    elif ratio >= 6:
+        score += 30
+
+    elif ratio >= 4:
+        score += 25
+
+    elif ratio >= 2:
+        score += 15
+
+    else:
+        score += 5
+
+
+    # --------------------------------------------------------
+    # PREMIUM SIZE
     # --------------------------------------------------------
 
     premium = item["premium"]
 
     if premium >= 3000000:
         score += 30
+
     elif premium >= 2000000:
         score += 25
+
     elif premium >= 1000000:
         score += 20
+
     elif premium >= 500000:
-        score += 12
-    else:
-        score += 5
-
-
-    # --------------------------------------------------------
-    # VOLUME RATIO SCORE - MAX 25
-    # --------------------------------------------------------
-
-    ratio = item["volume_ratio"]
-
-    if ratio >= 7:
-        score += 25
-    elif ratio >= 5:
-        score += 20
-    elif ratio >= 3:
-        score += 15
-    elif ratio >= 2:
         score += 10
-    else:
-        score += 5
 
 
     # --------------------------------------------------------
-    # CONTRACT SIZE - MAX 15
+    # SWEEP
+    # --------------------------------------------------------
+
+    if item["sweep"] == "YES":
+        score += 20
+
+
+    # --------------------------------------------------------
+    # BLOCK TRADE
+    # --------------------------------------------------------
+
+    if item["block_trade"] == "YES":
+        score += 20
+
+
+    # --------------------------------------------------------
+    # CONTRACT SIZE
     # --------------------------------------------------------
 
     contracts = item["contracts"]
 
     if contracts >= 4000:
         score += 15
-    elif contracts >= 3000:
-        score += 12
-    elif contracts >= 2000:
+
+    elif contracts >= 2500:
         score += 10
+
     elif contracts >= 1000:
-        score += 6
-    else:
-        score += 3
-
-
-    # --------------------------------------------------------
-    # SWEEP DETECTION - MAX 15
-    # --------------------------------------------------------
-
-    if item["sweep"]:
-        score += 15
-
-
-    # --------------------------------------------------------
-    # BLOCK TRADE - MAX 10
-    # --------------------------------------------------------
-
-    if item["block_trade"]:
-        score += 10
-
-
-    # --------------------------------------------------------
-    # AGGRESSIVE TRANSACTION - MAX 5
-    # --------------------------------------------------------
-
-    if item["transaction"] in ["Aggressive Buy", "Aggressive Sell"]:
         score += 5
 
+
+    # Maximum Score = 100
 
     return min(score, 100)
 
 
 # ============================================================
-# CONFIDENCE ENGINE
+# CONFIDENCE CALCULATION
 # ============================================================
 
-def get_confidence(score):
+def calculate_confidence(score):
 
     if score >= 90:
         return "EXTREME INSTITUTIONAL FLOW"
@@ -447,48 +467,59 @@ def get_confidence(score):
         return "HIGH CONVICTION"
 
     elif score >= 55:
-        return "STRONG FLOW"
+        return "MODERATE CONVICTION"
 
     elif score >= 35:
-        return "MODERATE FLOW"
+        return "NEUTRAL FLOW"
 
     else:
         return "LOW CONVICTION"
 
 
 # ============================================================
-# UNUSUAL VOLUME ENGINE
+# SIGNAL CALCULATION
 # ============================================================
 
-def get_unusual_volume(ratio):
+def calculate_signal(item):
 
-    if ratio >= 5:
-        return "EXTREME"
+    score = item["score"]
 
-    elif ratio >= 3:
-        return "HIGH"
+    if item["type"] == "CALL":
 
-    elif ratio >= 2:
-        return "MODERATE"
+        if score >= 75:
+            return "Bullish Institutional Flow"
+
+        elif score >= 50:
+            return "Moderate Bullish Flow"
+
+        else:
+            return "Low Bullish Conviction"
 
     else:
-        return "NORMAL"
+
+        if score >= 75:
+            return "Bearish Institutional Flow"
+
+        elif score >= 50:
+            return "Moderate Bearish Flow"
+
+        else:
+            return "Low Bearish Conviction"
 
 
 # ============================================================
-# ACTIVITY CLASSIFICATION
+# ADD SCORES TO DATA
 # ============================================================
 
-def get_activity(item):
+for item in sample_data:
 
-    if item["block_trade"]:
-        return "BLOCK TRADE"
+    item["score"] = calculate_score(item)
 
-    elif item["sweep"]:
-        return "SWEEP"
+    item["confidence"] = calculate_confidence(
+        item["score"]
+    )
 
-    else:
-        return "STANDARD FLOW"
+    item["signal"] = calculate_signal(item)
 
 
 # ============================================================
@@ -514,54 +545,22 @@ for item in sample_data:
     if flow_type == "PUTS" and item["type"] != "PUT":
         continue
 
-
-    # CREATE COPY
-    processed_item = item.copy()
-
-    processed_item["score"] = calculate_institutional_score(item)
-    processed_item["confidence"] = get_confidence(
-        processed_item["score"]
-    )
-    processed_item["unusual_volume"] = get_unusual_volume(
-        item["volume_ratio"]
-    )
-    processed_item["activity"] = get_activity(item)
-
-    if item["type"] == "CALL":
-        processed_item["signal"] = "Bullish Institutional Flow"
-    else:
-        processed_item["signal"] = "Bearish Institutional Flow"
-
-    filtered_data.append(processed_item)
+    filtered_data.append(item)
 
 
 # ============================================================
-# SORT BY INSTITUTIONAL SCORE
+# SUMMARY METRICS
 # ============================================================
 
-filtered_data = sorted(
-    filtered_data,
-    key=lambda x: x["score"],
-    reverse=True
-)
+bullish_flows = len([
+    x for x in filtered_data
+    if x["type"] == "CALL"
+])
 
-
-# ============================================================
-# EMPTY DATA CHECK
-# ============================================================
-
-if len(filtered_data) == 0:
-
-    st.warning(
-        "⚠️ No institutional options flow detected based on current filters."
-    )
-
-    st.stop()
-
-
-# ============================================================
-# MARKET SENTIMENT CALCULATIONS
-# ============================================================
+bearish_flows = len([
+    x for x in filtered_data
+    if x["type"] == "PUT"
+])
 
 call_premium = sum(
     x["premium"]
@@ -575,230 +574,37 @@ put_premium = sum(
     if x["type"] == "PUT"
 )
 
-total_premium = call_premium + put_premium
-
-
-if total_premium > 0:
-
-    bullish_percentage = (
-        call_premium / total_premium
-    ) * 100
-
-    bearish_percentage = (
-        put_premium / total_premium
-    ) * 100
-
-else:
-
-    bullish_percentage = 0
-    bearish_percentage = 0
-
-
-if bullish_percentage >= 60:
-    market_bias = "BULLISH"
-
-elif bearish_percentage >= 60:
-    market_bias = "BEARISH"
-
-else:
-    market_bias = "NEUTRAL"
-
 
 # ============================================================
-# MARKET SENTIMENT DASHBOARD
+# METRICS DISPLAY
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">📊 Institutional Market Sentiment</div>',
-    unsafe_allow_html=True
-)
+st.write("")
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-
     st.metric(
-        "🟢 CALL PREMIUM",
-        f"${call_premium:,.0f}"
+        "🟢 BULLISH CALL FLOW",
+        bullish_flows
     )
 
 with col2:
-
     st.metric(
-        "🔴 PUT PREMIUM",
-        f"${put_premium:,.0f}"
+        "🔴 BEARISH PUT FLOW",
+        bearish_flows
     )
 
 with col3:
-
     st.metric(
-        "🟢 BULLISH FLOW",
-        f"{bullish_percentage:.1f}%"
+        "💰 CALL PREMIUM",
+        f"${call_premium:,.0f}"
     )
 
 with col4:
-
     st.metric(
-        "🔴 BEARISH FLOW",
-        f"{bearish_percentage:.1f}%"
-    )
-
-
-st.write("")
-
-# MARKET BIAS
-
-if market_bias == "BULLISH":
-
-    st.success(
-        f"📈 Institutional Market Bias: {market_bias}"
-    )
-
-elif market_bias == "BEARISH":
-
-    st.error(
-        f"📉 Institutional Market Bias: {market_bias}"
-    )
-
-else:
-
-    st.info(
-        f"⚖️ Institutional Market Bias: {market_bias}"
-    )
-
-
-st.divider()
-
-
-# ============================================================
-# TOP PRIORITY ALERT
-# ============================================================
-
-top_trade = filtered_data[0]
-
-st.markdown(
-    '<div class="section-title">🔥 Highest Conviction Institutional Trade</div>',
-    unsafe_allow_html=True
-)
-
-
-if top_trade["type"] == "CALL":
-
-    st.markdown(
-        f"""
-        <div class="priority-bullish">
-
-            <h2>
-                🟢 {top_trade["ticker"]} —
-                <span class="bullish">
-                CALL
-                </span>
-                BUYING DETECTED
-            </h2>
-
-            <p>
-                <span class="label">Institutional Score:</span>
-                <span class="bullish">
-                {top_trade["score"]}/100
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Confidence:</span>
-                <span class="bullish">
-                {top_trade["confidence"]}
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Institutional Activity:</span>
-                <span class="bullish">
-                {top_trade["activity"]}
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Premium:</span>
-                ${top_trade["premium"]:,.0f}
-            </p>
-
-            <p>
-                <span class="label">Volume vs Average:</span>
-                <span class="gold">
-                {top_trade["volume_ratio"]:.1f}x
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Signal:</span>
-                <span class="bullish">
-                🟢 {top_trade["signal"]}
-                </span>
-            </p>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-else:
-
-    st.markdown(
-        f"""
-        <div class="priority-bearish">
-
-            <h2>
-                🔴 {top_trade["ticker"]} —
-                <span class="bearish">
-                PUT
-                </span>
-                BUYING DETECTED
-            </h2>
-
-            <p>
-                <span class="label">Institutional Score:</span>
-                <span class="bearish">
-                {top_trade["score"]}/100
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Confidence:</span>
-                <span class="bearish">
-                {top_trade["confidence"]}
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Institutional Activity:</span>
-                <span class="bearish">
-                {top_trade["activity"]}
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Premium:</span>
-                ${top_trade["premium"]:,.0f}
-            </p>
-
-            <p>
-                <span class="label">Volume vs Average:</span>
-                <span class="gold">
-                {top_trade["volume_ratio"]:.1f}x
-                </span>
-            </p>
-
-            <p>
-                <span class="label">Signal:</span>
-                <span class="bearish">
-                🔴 {top_trade["signal"]}
-                </span>
-            </p>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+        "💰 PUT PREMIUM",
+        f"${put_premium:,.0f}"
     )
 
 
@@ -815,39 +621,253 @@ st.markdown(
 )
 
 
-ranking_data = []
+if len(filtered_data) > 0:
 
-for item in filtered_data:
+    ranking_data = []
 
-    if item["type"] == "CALL":
-        direction = "🟢 CALL"
-    else:
-        direction = "🔴 PUT"
+    sorted_flows = sorted(
+        filtered_data,
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
-    ranking_data.append({
-        "Ticker": item["ticker"],
-        "Direction": direction,
-        "Activity": item["activity"],
-        "Premium": f"${item['premium']:,.0f}",
-        "Volume Ratio": f"{item['volume_ratio']:.1f}x",
-        "Score": f"{item['score']}/100"
-    })
+    for item in sorted_flows:
+
+        direction = (
+            "🟢 CALL"
+            if item["type"] == "CALL"
+            else "🔴 PUT"
+        )
+
+        ranking_data.append({
+
+            "Ticker": item["ticker"],
+            "Direction": direction,
+            "Activity": item["activity"],
+            "Premium": f"${item['premium']:,.0f}",
+            "Volume Ratio": f"{item['volume_ratio']:.1f}x",
+            "Score": f"{item['score']}/100"
+
+        })
 
 
-ranking_df = pd.DataFrame(ranking_data)
+    ranking_df = pd.DataFrame(ranking_data)
 
-st.dataframe(
-    ranking_df,
-    use_container_width=True,
-    hide_index=True
-)
+    st.dataframe(
+        ranking_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+else:
+
+    st.warning(
+        "No institutional options flow detected with the current filters."
+    )
 
 
 st.divider()
 
 
 # ============================================================
-# DETAILED INSTITUTIONAL ALERTS
+# HIGHEST CONVICTION INSTITUTIONAL TRADE
+# ============================================================
+
+if len(filtered_data) > 0:
+
+    top_trade = max(
+        filtered_data,
+        key=lambda x: x["score"]
+    )
+
+    st.markdown(
+        '<div class="section-title">🔥 Highest Conviction Institutional Trade</div>',
+        unsafe_allow_html=True
+    )
+
+
+    # --------------------------------------------------------
+    # CALL HIGHEST CONVICTION
+    # --------------------------------------------------------
+
+    if top_trade["type"] == "CALL":
+
+        conviction_html = f"""
+<div class="alert-card call-card">
+
+<div class="card-title">
+🟢 {top_trade["ticker"]} —
+<span class="call-text">CALL</span>
+BUYING DETECTED
+</div>
+
+<div class="card-line">
+<span class="label">Institutional Activity:</span>
+<span class="bullish">{top_trade["activity"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Institutional Score:</span>
+<span class="bullish">{top_trade["score"]}/100</span>
+</div>
+
+<div class="card-line">
+<span class="label">Confidence:</span>
+<span class="bullish">{top_trade["confidence"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Expiration:</span>
+{top_trade["expiration"]}
+</div>
+
+<div class="card-line">
+<span class="label">Contracts:</span>
+{top_trade["contracts"]:,}
+<span class="bullish">CALLS</span>
+</div>
+
+<div class="card-line">
+<span class="label">Strike:</span>
+${top_trade["strike"]}
+</div>
+
+<div class="card-line">
+<span class="label">Premium:</span>
+${top_trade["premium"]:,.0f}
+</div>
+
+<div class="card-line">
+<span class="label">Volume vs Average:</span>
+<span class="warning-text">{top_trade["volume_ratio"]:.1f}x</span>
+</div>
+
+<div class="card-line">
+<span class="label">Unusual Volume:</span>
+<span class="warning-text">{top_trade["unusual_volume"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Sweep Detected:</span>
+{"⚡ YES" if top_trade["sweep"] == "YES" else "NO"}
+</div>
+
+<div class="card-line">
+<span class="label">Block Trade:</span>
+{"🧱 YES" if top_trade["block_trade"] == "YES" else "NO"}
+</div>
+
+<div class="card-line">
+<span class="label">Transaction:</span>
+<span class="bullish">{top_trade["transaction"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Signal:</span>
+<span class="bullish">🟢 {top_trade["signal"]}</span>
+</div>
+
+</div>
+"""
+
+    # --------------------------------------------------------
+    # PUT HIGHEST CONVICTION
+    # --------------------------------------------------------
+
+    else:
+
+        conviction_html = f"""
+<div class="alert-card put-card">
+
+<div class="card-title">
+🔴 {top_trade["ticker"]} —
+<span class="put-text">PUT</span>
+BUYING DETECTED
+</div>
+
+<div class="card-line">
+<span class="label">Institutional Activity:</span>
+<span class="bearish">{top_trade["activity"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Institutional Score:</span>
+<span class="bearish">{top_trade["score"]}/100</span>
+</div>
+
+<div class="card-line">
+<span class="label">Confidence:</span>
+<span class="bearish">{top_trade["confidence"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Expiration:</span>
+{top_trade["expiration"]}
+</div>
+
+<div class="card-line">
+<span class="label">Contracts:</span>
+{top_trade["contracts"]:,}
+<span class="bearish">PUTS</span>
+</div>
+
+<div class="card-line">
+<span class="label">Strike:</span>
+${top_trade["strike"]}
+</div>
+
+<div class="card-line">
+<span class="label">Premium:</span>
+${top_trade["premium"]:,.0f}
+</div>
+
+<div class="card-line">
+<span class="label">Volume vs Average:</span>
+<span class="warning-text">{top_trade["volume_ratio"]:.1f}x</span>
+</div>
+
+<div class="card-line">
+<span class="label">Unusual Volume:</span>
+<span class="warning-text">{top_trade["unusual_volume"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Sweep Detected:</span>
+{"⚡ YES" if top_trade["sweep"] == "YES" else "NO"}
+</div>
+
+<div class="card-line">
+<span class="label">Block Trade:</span>
+{"🧱 YES" if top_trade["block_trade"] == "YES" else "NO"}
+</div>
+
+<div class="card-line">
+<span class="label">Transaction:</span>
+<span class="bearish">{top_trade["transaction"]}</span>
+</div>
+
+<div class="card-line">
+<span class="label">Signal:</span>
+<span class="bearish">🔴 {top_trade["signal"]}</span>
+</div>
+
+</div>
+"""
+
+
+    # IMPORTANT:
+    # Render HTML explicitly
+    st.markdown(
+        conviction_html,
+        unsafe_allow_html=True
+    )
+
+
+st.divider()
+
+
+# ============================================================
+# INSTITUTIONAL OPTIONS FLOW ALERTS
 # ============================================================
 
 st.markdown(
@@ -856,341 +876,200 @@ st.markdown(
 )
 
 
-for item in filtered_data:
+# ============================================================
+# FUNCTION TO RENDER ALERT CARD
+# ============================================================
 
-    # ========================================================
-    # CALL
-    # ========================================================
+def render_alert_card(item):
 
     if item["type"] == "CALL":
 
-        sweep_text = (
-            "⚡ YES"
-            if item["sweep"]
-            else "NO"
-        )
+        html = f"""
+<div class="alert-card call-card">
 
-        block_text = (
-            "🧱 YES"
-            if item["block_trade"]
-            else "NO"
-        )
+<div class="card-title">
+🟢 {item["ticker"]} —
+<span class="call-text">CALL</span>
+BUYING DETECTED
+</div>
 
-        st.markdown(
-            f"""
-            <div class="call-box">
+<div class="card-line">
+<span class="label">Institutional Activity:</span>
+<span class="bullish">{item["activity"]}</span>
+</div>
 
-                <h2>
-                    🟢 {item["ticker"]} —
-                    <span class="bullish">
-                    CALL
-                    </span>
-                    BUYING DETECTED
-                </h2>
+<div class="card-line">
+<span class="label">Institutional Score:</span>
+<span class="bullish">{item["score"]}/100</span>
+</div>
 
-                <p>
-                    <span class="label">Institutional Activity:</span>
-                    <span class="bullish">
-                    {item["activity"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Confidence:</span>
+<span class="bullish">{item["confidence"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Institutional Score:</span>
-                    <span class="bullish">
-                    {item["score"]}/100
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Expiration:</span>
+{item["expiration"]}
+</div>
 
-                <p>
-                    <span class="label">Confidence:</span>
-                    <span class="bullish">
-                    {item["confidence"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Contracts:</span>
+{item["contracts"]:,}
+<span class="bullish">CALLS</span>
+</div>
 
-                <p>
-                    <span class="label">Expiration:</span>
-                    {item["expiration"]}
-                </p>
+<div class="card-line">
+<span class="label">Strike:</span>
+${item["strike"]}
+</div>
 
-                <p>
-                    <span class="label">Contracts:</span>
-                    {item["contracts"]:,}
-                    <span class="bullish">
-                    CALLS
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Premium:</span>
+${item["premium"]:,.0f}
+</div>
 
-                <p>
-                    <span class="label">Strike:</span>
-                    ${item["strike"]}
-                </p>
+<div class="card-line">
+<span class="label">Volume vs Average:</span>
+<span class="warning-text">{item["volume_ratio"]:.1f}x</span>
+</div>
 
-                <p>
-                    <span class="label">Premium:</span>
-                    ${item["premium"]:,.0f}
-                </p>
+<div class="card-line">
+<span class="label">Unusual Volume:</span>
+<span class="warning-text">{item["unusual_volume"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Volume vs Average:</span>
-                    <span class="gold">
-                    {item["volume_ratio"]:.1f}x
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Sweep Detected:</span>
+{"⚡ YES" if item["sweep"] == "YES" else "NO"}
+</div>
 
-                <p>
-                    <span class="label">Unusual Volume:</span>
-                    <span class="gold">
-                    {item["unusual_volume"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Block Trade:</span>
+{"🧱 YES" if item["block_trade"] == "YES" else "NO"}
+</div>
 
-                <p>
-                    <span class="label">Sweep Detected:</span>
-                    {sweep_text}
-                </p>
+<div class="card-line">
+<span class="label">Transaction:</span>
+<span class="bullish">{item["transaction"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Block Trade:</span>
-                    {block_text}
-                </p>
+<div class="card-line">
+<span class="label">Signal:</span>
+<span class="bullish">🟢 {item["signal"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Transaction:</span>
-                    <span class="bullish">
-                    {item["transaction"]}
-                    </span>
-                </p>
-
-                <p>
-                    <span class="label">Signal:</span>
-                    <span class="bullish">
-                    🟢 {item["signal"]}
-                    </span>
-                </p>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    # ========================================================
-    # PUT
-    # ========================================================
+</div>
+"""
 
     else:
 
-        sweep_text = (
-            "⚡ YES"
-            if item["sweep"]
-            else "NO"
-        )
+        html = f"""
+<div class="alert-card put-card">
 
-        block_text = (
-            "🧱 YES"
-            if item["block_trade"]
-            else "NO"
-        )
+<div class="card-title">
+🔴 {item["ticker"]} —
+<span class="put-text">PUT</span>
+BUYING DETECTED
+</div>
 
-        st.markdown(
-            f"""
-            <div class="put-box">
+<div class="card-line">
+<span class="label">Institutional Activity:</span>
+<span class="bearish">{item["activity"]}</span>
+</div>
 
-                <h2>
-                    🔴 {item["ticker"]} —
-                    <span class="bearish">
-                    PUT
-                    </span>
-                    BUYING DETECTED
-                </h2>
+<div class="card-line">
+<span class="label">Institutional Score:</span>
+<span class="bearish">{item["score"]}/100</span>
+</div>
 
-                <p>
-                    <span class="label">Institutional Activity:</span>
-                    <span class="bearish">
-                    {item["activity"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Confidence:</span>
+<span class="bearish">{item["confidence"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Institutional Score:</span>
-                    <span class="bearish">
-                    {item["score"]}/100
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Expiration:</span>
+{item["expiration"]}
+</div>
 
-                <p>
-                    <span class="label">Confidence:</span>
-                    <span class="bearish">
-                    {item["confidence"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Contracts:</span>
+{item["contracts"]:,}
+<span class="bearish">PUTS</span>
+</div>
 
-                <p>
-                    <span class="label">Expiration:</span>
-                    {item["expiration"]}
-                </p>
+<div class="card-line">
+<span class="label">Strike:</span>
+${item["strike"]}
+</div>
 
-                <p>
-                    <span class="label">Contracts:</span>
-                    {item["contracts"]:,}
-                    <span class="bearish">
-                    PUTS
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Premium:</span>
+${item["premium"]:,.0f}
+</div>
 
-                <p>
-                    <span class="label">Strike:</span>
-                    ${item["strike"]}
-                </p>
+<div class="card-line">
+<span class="label">Volume vs Average:</span>
+<span class="warning-text">{item["volume_ratio"]:.1f}x</span>
+</div>
 
-                <p>
-                    <span class="label">Premium:</span>
-                    ${item["premium"]:,.0f}
-                </p>
+<div class="card-line">
+<span class="label">Unusual Volume:</span>
+<span class="warning-text">{item["unusual_volume"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Volume vs Average:</span>
-                    <span class="gold">
-                    {item["volume_ratio"]:.1f}x
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Sweep Detected:</span>
+{"⚡ YES" if item["sweep"] == "YES" else "NO"}
+</div>
 
-                <p>
-                    <span class="label">Unusual Volume:</span>
-                    <span class="gold">
-                    {item["unusual_volume"]}
-                    </span>
-                </p>
+<div class="card-line">
+<span class="label">Block Trade:</span>
+{"🧱 YES" if item["block_trade"] == "YES" else "NO"}
+</div>
 
-                <p>
-                    <span class="label">Sweep Detected:</span>
-                    {sweep_text}
-                </p>
+<div class="card-line">
+<span class="label">Transaction:</span>
+<span class="bearish">{item["transaction"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Block Trade:</span>
-                    {block_text}
-                </p>
+<div class="card-line">
+<span class="label">Signal:</span>
+<span class="bearish">🔴 {item["signal"]}</span>
+</div>
 
-                <p>
-                    <span class="label">Transaction:</span>
-                    <span class="bearish">
-                    {item["transaction"]}
-                    </span>
-                </p>
+</div>
+"""
 
-                <p>
-                    <span class="label">Signal:</span>
-                    <span class="bearish">
-                    🔴 {item["signal"]}
-                    </span>
-                </p>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    # This is the critical line that renders HTML
+    st.markdown(
+        html,
+        unsafe_allow_html=True
+    )
 
 
 # ============================================================
-# SMART MONEY SUMMARY
+# DISPLAY ALL ALERTS
 # ============================================================
 
-st.divider()
+if len(filtered_data) == 0:
 
-st.markdown(
-    '<div class="section-title">🧠 Smart Money Intelligence Summary</div>',
-    unsafe_allow_html=True
-)
-
-
-# GET TOP CALLS AND PUTS
-
-top_calls = [
-    x for x in filtered_data
-    if x["type"] == "CALL"
-]
-
-top_puts = [
-    x for x in filtered_data
-    if x["type"] == "PUT"
-]
-
-
-call_names = ", ".join(
-    [x["ticker"] for x in top_calls[:3]]
-)
-
-put_names = ", ".join(
-    [x["ticker"] for x in top_puts[:3]]
-)
-
-
-# CREATE SUMMARY
-
-if market_bias == "BULLISH":
-
-    summary = f"""
-    Institutional options activity currently shows a
-    <span class="bullish">BULLISH MARKET BIAS</span>.
-
-    CALL premium represents
-    <span class="bullish">{bullish_percentage:.1f}%</span>
-    of detected institutional flow.
-
-    The strongest bullish positioning is concentrated in
-    <span class="bullish">{call_names if call_names else "selected CALL contracts"}</span>.
-
-    Bearish positioning remains present through
-    <span class="bearish">{put_names if put_names else "PUT activity"}</span>,
-    suggesting selective hedging or bearish speculation.
-    """
-
-elif market_bias == "BEARISH":
-
-    summary = f"""
-    Institutional options activity currently shows a
-    <span class="bearish">BEARISH MARKET BIAS</span>.
-
-    PUT premium represents
-    <span class="bearish">{bearish_percentage:.1f}%</span>
-    of detected institutional flow.
-
-    The strongest bearish positioning is concentrated in
-    <span class="bearish">{put_names if put_names else "selected PUT contracts"}</span>.
-
-    Bullish positioning remains present through
-    <span class="bullish">{call_names if call_names else "CALL activity"}</span>,
-    suggesting selective upside speculation or hedging.
-    """
+    st.warning(
+        "No institutional options flow detected based on current filters."
+    )
 
 else:
 
-    summary = f"""
-    Institutional options activity currently shows a
-    <span class="gold">NEUTRAL MARKET BIAS</span>.
+    sorted_alerts = sorted(
+        filtered_data,
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
-    CALL premium represents
-    <span class="bullish">{bullish_percentage:.1f}%</span>
-    of institutional flow while PUT premium represents
-    <span class="bearish">{bearish_percentage:.1f}%</span>.
+    for item in sorted_alerts:
 
-    The institutional market is showing mixed positioning,
-    suggesting that smart money is selectively positioning
-    rather than expressing a strong directional bias.
-    """
-
-
-st.markdown(
-    f"""
-    <div class="summary-box">
-        <p>{summary}</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        render_alert_card(item)
 
 
 # ============================================================
@@ -1199,12 +1078,8 @@ st.markdown(
 
 st.divider()
 
-st.markdown(
-    """
-    <div class="footer">
-        LK Institutional Options Flow Scanner v3.0<br>
-        Smart Money Intelligence Engine • Institutional Flow Analytics
-    </div>
-    """,
-    unsafe_allow_html=True
+st.caption(
+    "LK Institutional Options Flow Scanner v2.0 • "
+    "Smart Money Detection Dashboard • "
+    "Institutional Flow Analysis"
 )
