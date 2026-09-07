@@ -2,10 +2,9 @@ import streamlit as st
 import pandas as pd
 import html
 
-
-# ============================================================
+# =========================================================
 # PAGE CONFIG
-# ============================================================
+# =========================================================
 
 st.set_page_config(
     page_title="LK Institutional Options Flow Scanner",
@@ -15,170 +14,128 @@ st.set_page_config(
 )
 
 
-# ============================================================
+# =========================================================
 # CUSTOM CSS
-# ============================================================
+# =========================================================
 
 st.markdown("""
 <style>
 
-/* ----------------------------------------------------------
-   MAIN APP
----------------------------------------------------------- */
-
+/* Main Background */
 .stApp {
-    background-color: #111827;
-    color: #E5E7EB;
+    background-color: #151d2b;
+    color: #e8edf5;
+}
+
+/* Hide Streamlit Branding */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    background: transparent !important;
 }
 
 
-/* ----------------------------------------------------------
-   REMOVE EXTRA TOP SPACE
----------------------------------------------------------- */
-
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
-
-
-/* ----------------------------------------------------------
-   SIDEBAR
----------------------------------------------------------- */
-
+/* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #1F2937;
-    border-right: 1px solid #374151;
+    background-color: #253142;
+    border-right: 1px solid #39475b;
 }
 
 [data-testid="stSidebar"] * {
-    color: #E5E7EB;
+    color: #e8edf5;
 }
 
 
-/* ----------------------------------------------------------
-   HEADER
----------------------------------------------------------- */
-
+/* Main Title */
 .main-title {
     font-size: 42px;
     font-weight: 800;
-    color: #F3F4F6;
+    color: #f1f3f7;
     margin-bottom: 5px;
 }
 
 .subtitle {
     font-size: 18px;
-    color: #9CA3AF;
-    margin-bottom: 30px;
+    color: #aeb7c5;
+    margin-bottom: 35px;
 }
 
 
-/* ----------------------------------------------------------
-   METRIC CARDS
----------------------------------------------------------- */
-
+/* Metric Cards */
 .metric-card {
-    background-color: #1F2937;
-    border: 1px solid #334155;
+    background: #222d3d;
+    border: 1px solid #35445a;
     border-radius: 16px;
-    padding: 24px;
-    min-height: 120px;
+    padding: 22px;
+    min-height: 115px;
 }
 
 .metric-label {
+    color: #aeb7c5;
     font-size: 14px;
-    color: #9CA3AF;
-    text-transform: uppercase;
+    font-weight: 600;
     letter-spacing: 0.5px;
 }
 
 .metric-value {
-    font-size: 34px;
+    color: #f3f5f8;
+    font-size: 32px;
     font-weight: 800;
-    color: #F3F4F6;
     margin-top: 8px;
 }
 
-.metric-green {
-    color: #6EE7B7;
-}
 
-.metric-red {
-    color: #FB7185;
-}
-
-.metric-gold {
-    color: #FBBF24;
-}
-
-
-/* ----------------------------------------------------------
-   SECTION TITLES
----------------------------------------------------------- */
-
+/* Section Titles */
 .section-title {
     font-size: 30px;
     font-weight: 800;
-    color: #F3F4F6;
+    color: #f1f3f7;
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
 
-/* ----------------------------------------------------------
-   DIVIDER
----------------------------------------------------------- */
-
-.divider {
-    border-top: 1px solid #374151;
-    margin-top: 25px;
-    margin-bottom: 25px;
+/* Divider */
+.custom-divider {
+    border-top: 1px solid #344052;
+    margin-top: 45px;
+    margin-bottom: 40px;
 }
 
 
-/* ----------------------------------------------------------
-   TABLE
----------------------------------------------------------- */
-
-.dataframe {
-    font-size: 15px;
-}
-
-
-/* ----------------------------------------------------------
-   FLOW CARD
----------------------------------------------------------- */
-
+/* Institutional Flow Cards */
 .flow-card {
     border-radius: 18px;
     padding: 28px;
     margin-bottom: 20px;
-    border-left: 6px solid #6EE7B7;
-    background: linear-gradient(
-        135deg,
-        #163B2C,
-        #18372B
-    );
 }
 
-.flow-card-put {
-    border-radius: 18px;
-    padding: 28px;
-    margin-bottom: 20px;
-    border-left: 6px solid #FB7185;
+.call-card {
     background: linear-gradient(
         135deg,
-        #48262C,
-        #3A2026
+        #173d30,
+        #1b342b
     );
+    border-left: 6px solid #58d69b;
+}
+
+.put-card {
+    background: linear-gradient(
+        135deg,
+        #4b282d,
+        #44262b
+    );
+    border-left: 6px solid #ff5964;
 }
 
 
-/* ----------------------------------------------------------
-   FLOW CARD HEADER
----------------------------------------------------------- */
-
+/* Flow Header */
 .flow-card-header {
     display: flex;
     align-items: center;
@@ -187,309 +144,579 @@ st.markdown("""
 }
 
 .flow-title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 800;
-    color: #F3F4F6;
+    color: #f4f5f7;
 }
 
 .call-highlight {
-    color: #6EE7B7;
+    color: #62d69d;
 }
 
 .put-highlight {
-    color: #FB7185;
+    color: #ff737d;
 }
 
 
-/* ----------------------------------------------------------
-   CONFIDENCE
----------------------------------------------------------- */
-
+/* Confidence */
 .confidence-call {
-    background-color: rgba(34, 197, 94, 0.15);
-    color: #6EE7B7;
+    background-color: rgba(88, 214, 155, 0.15);
+    color: #62d69d;
+    border: 1px solid rgba(88, 214, 155, 0.35);
     padding: 8px 14px;
     border-radius: 10px;
-    font-size: 14px;
     font-weight: 700;
+    font-size: 14px;
 }
 
 .confidence-put {
-    background-color: rgba(239, 68, 68, 0.15);
-    color: #FB7185;
+    background-color: rgba(255, 89, 100, 0.15);
+    color: #ff737d;
+    border: 1px solid rgba(255, 89, 100, 0.35);
     padding: 8px 14px;
     border-radius: 10px;
-    font-size: 14px;
     font-weight: 700;
+    font-size: 14px;
 }
 
 
-/* ----------------------------------------------------------
-   SCORE
----------------------------------------------------------- */
-
+/* Score */
 .score-call {
     font-size: 22px;
     font-weight: 800;
-    color: #6EE7B7;
+    color: #62d69d;
 }
 
 .score-put {
     font-size: 22px;
     font-weight: 800;
-    color: #FB7185;
+    color: #ff737d;
 }
 
 
-/* ----------------------------------------------------------
-   INFO GRID
----------------------------------------------------------- */
-
+/* Info Grid */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
 }
 
 .info-box {
-    background-color: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    padding: 14px;
+    padding: 15px;
 }
 
 .info-label {
     font-size: 13px;
-    color: #9CA3AF;
-    margin-bottom: 5px;
+    color: #aeb7c5;
+    margin-bottom: 7px;
 }
 
 .info-value {
     font-size: 17px;
     font-weight: 700;
-    color: #F3F4F6;
+    color: #f2f4f7;
 }
 
 .call-value {
-    color: #6EE7B7;
+    color: #62d69d;
 }
 
 .put-value {
-    color: #FB7185;
+    color: #ff737d;
 }
 
 .gold-value {
-    color: #FBBF24;
+    color: #f2c96d;
 }
 
 
-/* ----------------------------------------------------------
-   ALERT GRID
----------------------------------------------------------- */
-
-.alert-grid-title {
-    font-size: 30px;
-    font-weight: 800;
-    color: #F3F4F6;
-    margin-top: 25px;
-    margin-bottom: 20px;
+/* Signal Footer */
+.signal-box {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    font-size: 18px;
+    font-weight: 700;
 }
 
 
-/* ----------------------------------------------------------
-   FOOTER
----------------------------------------------------------- */
+/* Dataframe */
+[data-testid="stDataFrame"] {
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-.footer {
-    color: #6B7280;
-    font-size: 13px;
-    text-align: center;
-    margin-top: 50px;
+
+/* Sidebar Button */
+.stButton > button {
+    width: 100%;
+    border-radius: 10px;
+    height: 45px;
+    background-color: #2c3a4e;
+    color: white;
+    border: 1px solid #465873;
+    font-weight: 700;
+}
+
+.stButton > button:hover {
+    background-color: #34465d;
+    border-color: #62d69d;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# ============================================================
-# SAMPLE DATA
-# ============================================================
-# Later we can replace this section with real options flow data.
+# =========================================================
+# SAMPLE INSTITUTIONAL FLOW DATA
+# =========================================================
 
-data = [
+flow_data = [
     {
-        "Ticker": "META",
-        "Direction": "CALL",
-        "Activity": "SWEEP",
-        "Premium": 3900000,
-        "Volume Ratio": 9.0,
-        "Score": 95,
-        "Expiration": "Sep 13",
-        "Contracts": 3600,
-        "Strike": 750,
-        "Unusual Volume": "EXTREME",
-        "Sweep Detected": "YES",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Buy",
-        "Signal": "Bullish Institutional Flow"
+        "ticker": "META",
+        "direction": "CALL",
+        "activity": "SWEEP",
+        "premium": 3900000,
+        "volume_ratio": 9.0,
+        "score": 95,
+        "expiration": "Sep 13",
+        "contracts": 3600,
+        "strike": 750,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
+        "transaction": "Aggressive Buy",
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "NVDA",
-        "Direction": "PUT",
-        "Activity": "BLOCK TRADE",
-        "Premium": 3200000,
-        "Volume Ratio": 7.0,
-        "Score": 95,
-        "Expiration": "Sep 13",
-        "Contracts": 4200,
-        "Strike": 175,
-        "Unusual Volume": "EXTREME",
-        "Sweep Detected": "NO",
-        "Block Trade": "YES",
-        "Transaction": "Aggressive Sell",
-        "Signal": "Bearish Institutional Flow"
+        "ticker": "NVDA",
+        "direction": "PUT",
+        "activity": "BLOCK TRADE",
+        "premium": 3200000,
+        "volume_ratio": 7.0,
+        "score": 95,
+        "expiration": "Sep 13",
+        "contracts": 4200,
+        "strike": 175,
+        "unusual_volume": "EXTREME",
+        "sweep": "NO",
+        "block_trade": "YES",
+        "transaction": "Aggressive Sell",
+        "signal": "Bearish Institutional Flow"
     },
     {
-        "Ticker": "QQQ",
-        "Direction": "PUT",
-        "Activity": "SWEEP",
-        "Premium": 2200000,
-        "Volume Ratio": 6.2,
-        "Score": 85,
-        "Expiration": "Sep 10",
-        "Contracts": 3100,
-        "Strike": 580,
-        "Unusual Volume": "EXTREME",
-        "Sweep Detected": "YES",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Sell",
-        "Signal": "Bearish Institutional Flow"
+        "ticker": "QQQ",
+        "direction": "PUT",
+        "activity": "SWEEP",
+        "premium": 2200000,
+        "volume_ratio": 6.2,
+        "score": 85,
+        "expiration": "Sep 10",
+        "contracts": 3100,
+        "strike": 580,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
+        "transaction": "Aggressive Sell",
+        "signal": "Bearish Institutional Flow"
     },
     {
-        "Ticker": "AAPL",
-        "Direction": "CALL",
-        "Activity": "SWEEP",
-        "Premium": 1800000,
-        "Volume Ratio": 5.6,
-        "Score": 75,
-        "Expiration": "Sep 10",
-        "Contracts": 2500,
-        "Strike": 325,
-        "Unusual Volume": "EXTREME",
-        "Sweep Detected": "YES",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Buy",
-        "Signal": "Bullish Institutional Flow"
+        "ticker": "SPY",
+        "direction": "CALL",
+        "activity": "SWEEP",
+        "premium": 2100000,
+        "volume_ratio": 4.9,
+        "score": 80,
+        "expiration": "Sep 10",
+        "contracts": 2800,
+        "strike": 650,
+        "unusual_volume": "HIGH",
+        "sweep": "YES",
+        "block_trade": "NO",
+        "transaction": "Aggressive Buy",
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "TSLA",
-        "Direction": "CALL",
-        "Activity": "STANDARD FLOW",
-        "Premium": 1450000,
-        "Volume Ratio": 2.0,
-        "Score": 40,
-        "Expiration": "Sep 13",
-        "Contracts": 1800,
-        "Strike": 350,
-        "Unusual Volume": "MODERATE",
-        "Sweep Detected": "NO",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Buy",
-        "Signal": "Low Bullish Conviction"
+        "ticker": "AAPL",
+        "direction": "CALL",
+        "activity": "SWEEP",
+        "premium": 1800000,
+        "volume_ratio": 5.6,
+        "score": 75,
+        "expiration": "Sep 10",
+        "contracts": 2500,
+        "strike": 325,
+        "unusual_volume": "EXTREME",
+        "sweep": "YES",
+        "block_trade": "NO",
+        "transaction": "Aggressive Buy",
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "PLTR",
-        "Direction": "CALL",
-        "Activity": "STANDARD FLOW",
-        "Premium": 650000,
-        "Volume Ratio": 1.4,
-        "Score": 20,
-        "Expiration": "Sep 20",
-        "Contracts": 1100,
-        "Strike": 200,
-        "Unusual Volume": "NORMAL",
-        "Sweep Detected": "NO",
-        "Block Trade": "NO",
-        "Transaction": "Neutral",
-        "Signal": "Low Bullish Conviction"
+        "ticker": "NFLX",
+        "direction": "CALL",
+        "activity": "BLOCK TRADE",
+        "premium": 1200000,
+        "volume_ratio": 3.8,
+        "score": 60,
+        "expiration": "Sep 20",
+        "contracts": 1500,
+        "strike": 1250,
+        "unusual_volume": "HIGH",
+        "sweep": "NO",
+        "block_trade": "YES",
+        "transaction": "Aggressive Buy",
+        "signal": "Bullish Institutional Flow"
     },
     {
-        "Ticker": "AMZN",
-        "Direction": "PUT",
-        "Activity": "STANDARD FLOW",
-        "Premium": 480000,
-        "Volume Ratio": 1.3,
-        "Score": 15,
-        "Expiration": "Sep 20",
-        "Contracts": 900,
-        "Strike": 210,
-        "Unusual Volume": "NORMAL",
-        "Sweep Detected": "NO",
-        "Block Trade": "NO",
-        "Transaction": "Neutral",
-        "Signal": "Low Bearish Conviction"
+        "ticker": "MSFT",
+        "direction": "PUT",
+        "activity": "STANDARD FLOW",
+        "premium": 750000,
+        "volume_ratio": 2.4,
+        "score": 45,
+        "expiration": "Sep 20",
+        "contracts": 1200,
+        "strike": 480,
+        "unusual_volume": "MODERATE",
+        "sweep": "NO",
+        "block_trade": "NO",
+        "transaction": "Neutral",
+        "signal": "Moderate Bearish Flow"
     },
     {
-        "Ticker": "NFLX",
-        "Direction": "CALL",
-        "Activity": "BLOCK TRADE",
-        "Premium": 1200000,
-        "Volume Ratio": 3.8,
-        "Score": 60,
-        "Expiration": "Sep 13",
-        "Contracts": 1400,
-        "Strike": 1300,
-        "Unusual Volume": "HIGH",
-        "Sweep Detected": "NO",
-        "Block Trade": "YES",
-        "Transaction": "Aggressive Buy",
-        "Signal": "Bullish Institutional Flow"
+        "ticker": "TSLA",
+        "direction": "CALL",
+        "activity": "STANDARD FLOW",
+        "premium": 1450000,
+        "volume_ratio": 2.0,
+        "score": 40,
+        "expiration": "Sep 13",
+        "contracts": 1800,
+        "strike": 350,
+        "unusual_volume": "MODERATE",
+        "sweep": "NO",
+        "block_trade": "NO",
+        "transaction": "Aggressive Buy",
+        "signal": "Low Bullish Conviction"
     },
     {
-        "Ticker": "MSFT",
-        "Direction": "PUT",
-        "Activity": "STANDARD FLOW",
-        "Premium": 750000,
-        "Volume Ratio": 2.4,
-        "Score": 45,
-        "Expiration": "Sep 13",
-        "Contracts": 1200,
-        "Strike": 500,
-        "Unusual Volume": "MODERATE",
-        "Sweep Detected": "NO",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Sell",
-        "Signal": "Moderate Bearish Flow"
-    },
-    {
-        "Ticker": "SPY",
-        "Direction": "CALL",
-        "Activity": "SWEEP",
-        "Premium": 2100000,
-        "Volume Ratio": 4.9,
-        "Score": 80,
-        "Expiration": "Sep 10",
-        "Contracts": 3500,
-        "Strike": 650,
-        "Unusual Volume": "EXTREME",
-        "Sweep Detected": "YES",
-        "Block Trade": "NO",
-        "Transaction": "Aggressive Buy",
-        "Signal": "High Conviction Bullish Flow"
+        "ticker": "PLTR",
+        "direction": "CALL",
+        "activity": "STANDARD FLOW",
+        "premium": 650000,
+        "volume_ratio": 1.4,
+        "score": 20,
+        "expiration": "Sep 20",
+        "contracts": 1100,
+        "strike": 200,
+        "unusual_volume": "NORMAL",
+        "sweep": "NO",
+        "block_trade": "NO",
+        "transaction": "Neutral",
+        "signal": "Low Bullish Conviction"
     }
 ]
 
+df = pd.DataFrame(flow_data)
 
-df = pd.DataFrame(data)
+
+# =========================================================
+# SIDEBAR CONTROLS
+# =========================================================
+
+st.sidebar.markdown("## ⚙️ Scanner Controls")
+
+all_tickers = sorted(df["ticker"].unique().tolist())
+
+selected_tickers = st.sidebar.multiselect(
+    "Select Tickers",
+    options=all_tickers,
+    default=all_tickers
+)
+
+min_contracts = st.sidebar.slider(
+    "Minimum Contracts",
+    min_value=0,
+    max_value=5000,
+    value=1000,
+    step=100
+)
+
+min_premium = st.sidebar.slider(
+    "Minimum Premium ($)",
+    min_value=0,
+    max_value=5000000,
+    value=100000,
+    step=50000
+)
+
+flow_type = st.sidebar.radio(
+    "Flow Type",
+    ["All", "CALLS", "PUTS"]
+)
+
+st.sidebar.markdown("---")
+
+scan_button = st.sidebar.button("🔍 Scan Institutional Flow")
 
 
-# ============================================================
-# HELPER FUNCTIONS
-# ============================================================
+# =========================================================
+# FILTER LOGIC
+# =========================================================
 
-def format_currency(value):
-    return "${:,.0f}".format(value)
+filtered_df = df.copy()
 
+if selected_tickers:
+    filtered_df = filtered_df[
+        filtered_df["ticker"].isin(selected_tickers)
+    ]
+
+filtered_df = filtered_df[
+    filtered_df["contracts"] >= min_contracts
+]
+
+filtered_df = filtered_df[
+    filtered_df["premium"] >= min_premium
+]
+
+if flow_type == "CALLS":
+    filtered_df = filtered_df[
+        filtered_df["direction"] == "CALL"
+    ]
+
+elif flow_type == "PUTS":
+    filtered_df = filtered_df[
+        filtered_df["direction"] == "PUT"
+    ]
+
+
+filtered_df = filtered_df.sort_values(
+    by=["score", "premium"],
+    ascending=False
+).reset_index(drop=True)
+
+
+# =========================================================
+# HEADER
+# =========================================================
+
+st.markdown(
+    """
+    <div class="main-title">
+        📊 LK Institutional Options Flow Scanner
+    </div>
+
+    <div class="subtitle">
+        Smart Money Detection • Institutional Options Activity • High Conviction Flow Analysis
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# EMPTY RESULT
+# =========================================================
+
+if filtered_df.empty:
+
+    st.warning(
+        "No institutional options flow matches your current scanner filters."
+    )
+
+    st.stop()
+
+
+# =========================================================
+# METRICS
+# =========================================================
+
+bullish_count = len(
+    filtered_df[
+        filtered_df["direction"] == "CALL"
+    ]
+)
+
+bearish_count = len(
+    filtered_df[
+        filtered_df["direction"] == "PUT"
+    ]
+)
+
+call_premium = filtered_df.loc[
+    filtered_df["direction"] == "CALL",
+    "premium"
+].sum()
+
+put_premium = filtered_df.loc[
+    filtered_df["direction"] == "PUT",
+    "premium"
+].sum()
+
+
+col1, col2, col3, col4 = st.columns(4)
+
+
+with col1:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">
+                🟢 BULLISH CALL FLOW
+            </div>
+            <div class="metric-value">
+                {bullish_count}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col2:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">
+                🔴 BEARISH PUT FLOW
+            </div>
+            <div class="metric-value">
+                {bearish_count}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col3:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">
+                💰 CALL PREMIUM
+            </div>
+            <div class="metric-value">
+                ${call_premium:,.0f}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col4:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">
+                💰 PUT PREMIUM
+            </div>
+            <div class="metric-value">
+                ${put_premium:,.0f}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# =========================================================
+# DIVIDER
+# =========================================================
+
+st.markdown(
+    '<div class="custom-divider"></div>',
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# TOP INSTITUTIONAL FLOW RANKING
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">🏆 Top Institutional Flow Ranking</div>',
+    unsafe_allow_html=True
+)
+
+
+display_df = filtered_df[
+    [
+        "ticker",
+        "direction",
+        "activity",
+        "premium",
+        "volume_ratio",
+        "score"
+    ]
+].copy()
+
+
+display_df.columns = [
+    "Ticker",
+    "Direction",
+    "Activity",
+    "Premium",
+    "Volume Ratio",
+    "Score"
+]
+
+
+display_df["Direction"] = display_df["Direction"].apply(
+    lambda x: "🟢 CALL" if x == "CALL" else "🔴 PUT"
+)
+
+display_df["Premium"] = display_df["Premium"].apply(
+    lambda x: f"${x:,.0f}"
+)
+
+display_df["Volume Ratio"] = display_df["Volume Ratio"].apply(
+    lambda x: f"{x:.1f}x"
+)
+
+display_df["Score"] = display_df["Score"].apply(
+    lambda x: f"{x}/100"
+)
+
+
+st.dataframe(
+    display_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+
+# =========================================================
+# DIVIDER
+# =========================================================
+
+st.markdown(
+    '<div class="custom-divider"></div>',
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# HIGHEST CONVICTION TRADE
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">🔥 Highest Conviction Institutional Trade</div>',
+    unsafe_allow_html=True
+)
+
+
+highest_trade = filtered_df.iloc[0]
+
+
+# =========================================================
+# CONFIDENCE FUNCTION
+# =========================================================
 
 def get_confidence(score):
 
@@ -505,340 +732,62 @@ def get_confidence(score):
     elif score >= 30:
         return "NEUTRAL FLOW"
 
-    return "LOW CONVICTION"
+    else:
+        return "LOW CONVICTION"
 
 
-def get_unusual_level(ratio):
-
-    if ratio >= 5:
-        return "EXTREME"
-
-    elif ratio >= 3:
-        return "HIGH"
-
-    elif ratio >= 1.5:
-        return "MODERATE"
-
-    return "NORMAL"
-
-
-# ============================================================
-# SIDEBAR
-# ============================================================
-
-with st.sidebar:
-
-    st.markdown("## ⚙️ Scanner Controls")
-
-    available_tickers = sorted(df["Ticker"].unique())
-
-    selected_tickers = st.multiselect(
-        "Select Tickers",
-        available_tickers,
-        default=available_tickers
-    )
-
-    minimum_contracts = st.slider(
-        "Minimum Contracts",
-        min_value=0,
-        max_value=10000,
-        value=1000,
-        step=100
-    )
-
-    minimum_premium = st.slider(
-        "Minimum Premium ($)",
-        min_value=0,
-        max_value=5000000,
-        value=100000,
-        step=50000
-    )
-
-    flow_type = st.radio(
-        "Flow Type",
-        ["All", "CALLS", "PUTS"]
-    )
-
-    st.markdown("---")
-
-    scan_button = st.button(
-        "🔍 Scan Institutional Flow",
-        use_container_width=True
-    )
-
-
-# ============================================================
-# FILTER DATA
-# ============================================================
-
-filtered_df = df.copy()
-
-filtered_df = filtered_df[
-    filtered_df["Ticker"].isin(selected_tickers)
-]
-
-filtered_df = filtered_df[
-    filtered_df["Contracts"] >= minimum_contracts
-]
-
-filtered_df = filtered_df[
-    filtered_df["Premium"] >= minimum_premium
-]
-
-if flow_type == "CALLS":
-
-    filtered_df = filtered_df[
-        filtered_df["Direction"] == "CALL"
-    ]
-
-elif flow_type == "PUTS":
-
-    filtered_df = filtered_df[
-        filtered_df["Direction"] == "PUT"
-    ]
-
-
-# ============================================================
-# MAIN HEADER
-# ============================================================
-
-st.markdown(
-    '<div class="main-title">📊 LK Institutional Options Flow Scanner</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    '<div class="subtitle">Smart Money Detection • Institutional Options Activity • High Conviction Flow Analysis</div>',
-    unsafe_allow_html=True
-)
-
-
-# ============================================================
-# EMPTY RESULT CHECK
-# ============================================================
-
-if filtered_df.empty:
-
-    st.warning(
-        "No institutional flow matches the current filters. "
-        "Try reducing the Minimum Contracts or Minimum Premium."
-    )
-
-    st.stop()
-
-
-# ============================================================
-# SUMMARY METRICS
-# ============================================================
-
-bullish_count = len(
-    filtered_df[
-        filtered_df["Direction"] == "CALL"
-    ]
-)
-
-bearish_count = len(
-    filtered_df[
-        filtered_df["Direction"] == "PUT"
-    ]
-)
-
-call_premium = filtered_df.loc[
-    filtered_df["Direction"] == "CALL",
-    "Premium"
-].sum()
-
-put_premium = filtered_df.loc[
-    filtered_df["Direction"] == "PUT",
-    "Premium"
-].sum()
-
-
-col1, col2, col3, col4 = st.columns(4)
-
-
-with col1:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            🟢 Bullish Call Flow
-        </div>
-
-        <div class="metric-value metric-green">
-            {bullish_count}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-with col2:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            🔴 Bearish Put Flow
-        </div>
-
-        <div class="metric-value metric-red">
-            {bearish_count}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-with col3:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            💰 Call Premium
-        </div>
-
-        <div class="metric-value metric-gold">
-            {format_currency(call_premium)}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-with col4:
-
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-label">
-            💰 Put Premium
-        </div>
-
-        <div class="metric-value metric-gold">
-            {format_currency(put_premium)}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# ============================================================
-# DIVIDER
-# ============================================================
-
-st.markdown(
-    '<div class="divider"></div>',
-    unsafe_allow_html=True
-)
-
-
-# ============================================================
-# TOP INSTITUTIONAL FLOW RANKING
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">🏆 Top Institutional Flow Ranking</div>',
-    unsafe_allow_html=True
-)
-
-
-ranking_df = filtered_df.copy()
-
-ranking_df = ranking_df.sort_values(
-    by="Score",
-    ascending=False
-)
-
-
-display_df = pd.DataFrame()
-
-display_df["Ticker"] = ranking_df["Ticker"]
-
-display_df["Direction"] = ranking_df.apply(
-    lambda row:
-    "🟢 CALL"
-    if row["Direction"] == "CALL"
-    else "🔴 PUT",
-    axis=1
-)
-
-display_df["Activity"] = ranking_df["Activity"]
-
-display_df["Premium"] = ranking_df["Premium"].apply(
-    format_currency
-)
-
-display_df["Volume Ratio"] = ranking_df[
-    "Volume Ratio"
-].apply(
-    lambda x: f"{x:.1f}x"
-)
-
-display_df["Score"] = ranking_df[
-    "Score"
-].apply(
-    lambda x: f"{x}/100"
-)
-
-
-st.dataframe(
-    display_df,
-    use_container_width=True,
-    hide_index=True
-)
-
-
-# ============================================================
-# DIVIDER
-# ============================================================
-
-st.markdown(
-    '<div class="divider"></div>',
-    unsafe_allow_html=True
-)
-
-
-# ============================================================
+# =========================================================
 # FLOW CARD FUNCTION
-# ============================================================
+# =========================================================
 
-def create_flow_card(row):
+def create_flow_card(trade):
 
-    ticker = html.escape(str(row["Ticker"]))
-    direction = html.escape(str(row["Direction"]))
-    activity = html.escape(str(row["Activity"]))
-    expiration = html.escape(str(row["Expiration"]))
-    transaction = html.escape(str(row["Transaction"]))
-    signal = html.escape(str(row["Signal"]))
-    unusual_volume = html.escape(str(row["Unusual Volume"]))
+    ticker = html.escape(str(trade["ticker"]))
+    direction = html.escape(str(trade["direction"]))
+    activity = html.escape(str(trade["activity"]))
+    expiration = html.escape(str(trade["expiration"]))
+    unusual_volume = html.escape(str(trade["unusual_volume"]))
+    transaction = html.escape(str(trade["transaction"]))
+    signal = html.escape(str(trade["signal"]))
 
-    score = int(row["Score"])
-    contracts = int(row["Contracts"])
-    strike = float(row["Strike"])
-    premium = float(row["Premium"])
-    volume_ratio = float(row["Volume Ratio"])
+    score = int(trade["score"])
+    contracts = int(trade["contracts"])
+    strike = float(trade["strike"])
+    premium = float(trade["premium"])
+    volume_ratio = float(trade["volume_ratio"])
 
     confidence = get_confidence(score)
 
     if direction == "CALL":
 
-        card_class = "flow-card"
-        direction_class = "call-highlight"
+        card_class = "flow-card call-card"
+        highlight_class = "call-highlight"
         confidence_class = "confidence-call"
         score_class = "score-call"
         value_class = "call-value"
 
-        direction_dot = "🟢"
-        transaction_text = "Aggressive Buy"
+        direction_html = (
+            f'<span class="{highlight_class}">CALL</span>'
+        )
+
+        signal_icon = "🟢"
 
     else:
 
-        card_class = "flow-card-put"
-        direction_class = "put-highlight"
+        card_class = "flow-card put-card"
+        highlight_class = "put-highlight"
         confidence_class = "confidence-put"
         score_class = "score-put"
         value_class = "put-value"
 
-        direction_dot = "🔴"
-        transaction_text = "Aggressive Sell"
+        direction_html = (
+            f'<span class="{highlight_class}">PUT</span>'
+        )
 
-    sweep_icon = "⚡" if row["Sweep Detected"] == "YES" else ""
-    block_icon = "🧱" if row["Block Trade"] == "YES" else ""
+        signal_icon = "🔴"
+
+    sweep_icon = "⚡" if trade["sweep"] == "YES" else ""
+    block_icon = "🧱" if trade["block_trade"] == "YES" else ""
 
     card_html = f"""
     <div class="{card_class}">
@@ -846,34 +795,24 @@ def create_flow_card(row):
         <div class="flow-card-header">
 
             <div class="flow-title">
-                {direction_dot} {ticker} —
-                <span class="{direction_class}">
-                    {direction}
-                </span>
+                {signal_icon}
+                {ticker} —
+                {direction_html}
                 BUYING DETECTED
             </div>
 
-        </div>
-
-        <div style="margin-bottom:20px;">
-
-            <span class="{confidence_class}">
-                {confidence}
-            </span>
-
-            <span class="{score_class}"
-                  style="margin-left:15px;">
-                Institutional Score: {score}/100
-            </span>
+            <div>
+                <span class="{confidence_class}">
+                    {confidence}
+                </span>
+            </div>
 
         </div>
 
 
         <div class="info-grid">
 
-
             <div class="info-box">
-
                 <div class="info-label">
                     Institutional Activity
                 </div>
@@ -881,25 +820,21 @@ def create_flow_card(row):
                 <div class="info-value {value_class}">
                     {activity}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
-                    Premium
+                    Institutional Score
                 </div>
 
-                <div class="info-value">
-                    {format_currency(premium)}
+                <div class="info-value {score_class}">
+                    {score}/100
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Expiration
                 </div>
@@ -907,25 +842,21 @@ def create_flow_card(row):
                 <div class="info-value">
                     {expiration}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Contracts
                 </div>
 
-                <div class="info-value {value_class}">
+                <div class="info-value">
                     {contracts:,} {direction}S
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Strike
                 </div>
@@ -933,12 +864,21 @@ def create_flow_card(row):
                 <div class="info-value">
                     ${strike:,.0f}
                 </div>
-
             </div>
 
 
             <div class="info-box">
+                <div class="info-label">
+                    Premium
+                </div>
 
+                <div class="info-value gold-value">
+                    ${premium:,.0f}
+                </div>
+            </div>
+
+
+            <div class="info-box">
                 <div class="info-label">
                     Volume vs Average
                 </div>
@@ -946,12 +886,10 @@ def create_flow_card(row):
                 <div class="info-value gold-value">
                     {volume_ratio:.1f}x
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Unusual Volume
                 </div>
@@ -959,38 +897,32 @@ def create_flow_card(row):
                 <div class="info-value gold-value">
                     {unusual_volume}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Sweep Detected
                 </div>
 
                 <div class="info-value">
-                    {sweep_icon} {row["Sweep Detected"]}
+                    {sweep_icon} {trade["sweep"]}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Block Trade
                 </div>
 
                 <div class="info-value">
-                    {block_icon} {row["Block Trade"]}
+                    {block_icon} {trade["block_trade"]}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
                     Transaction
                 </div>
@@ -998,36 +930,27 @@ def create_flow_card(row):
                 <div class="info-value {value_class}">
                     {transaction}
                 </div>
-
             </div>
 
 
             <div class="info-box">
-
                 <div class="info-label">
-                    Institutional Signal
+                    Signal
                 </div>
 
                 <div class="info-value {value_class}">
-                    {direction_dot} {signal}
+                    {signal_icon} {signal}
                 </div>
-
             </div>
 
-
-            <div class="info-box">
-
-                <div class="info-label">
-                    Flow Direction
-                </div>
-
-                <div class="info-value {value_class}">
-                    {direction}
-                </div>
-
-            </div>
+        </div>
 
 
+        <div class="signal-box">
+            Institutional Smart Money Signal:
+            <span class="{value_class}">
+                {signal}
+            </span>
         </div>
 
     </div>
@@ -1036,32 +959,31 @@ def create_flow_card(row):
     return card_html
 
 
-# ============================================================
-# HIGHEST CONVICTION TRADE
-# ============================================================
+# =========================================================
+# DISPLAY HIGHEST CONVICTION CARD
+# =========================================================
 
-highest_trade = ranking_df.iloc[0]
-
+highest_card = create_flow_card(highest_trade)
 
 st.markdown(
-    '<div class="section-title">🔥 Highest Conviction Institutional Trade</div>',
+    highest_card,
     unsafe_allow_html=True
 )
 
 
-highest_card_html = create_flow_card(highest_trade)
+# =========================================================
+# DIVIDER
+# =========================================================
 
-# IMPORTANT:
-# This is what fixes the HTML showing as text.
 st.markdown(
-    highest_card_html,
+    '<div class="custom-divider"></div>',
     unsafe_allow_html=True
 )
 
 
-# ============================================================
+# =========================================================
 # INSTITUTIONAL OPTIONS FLOW ALERTS
-# ============================================================
+# =========================================================
 
 st.markdown(
     '<div class="section-title">🚨 Institutional Options Flow Alerts</div>',
@@ -1069,55 +991,49 @@ st.markdown(
 )
 
 
-# Get top trades excluding the highest trade
-alerts_df = ranking_df.iloc[1:7].copy()
+# Show remaining institutional trades
+remaining_trades = filtered_df.iloc[1:]
 
 
-# Display alerts in 2 columns
-for i in range(0, len(alerts_df), 2):
+for index in range(0, len(remaining_trades), 2):
 
     col_left, col_right = st.columns(2)
 
-    # LEFT CARD
     with col_left:
 
-        if i < len(alerts_df):
+        trade = remaining_trades.iloc[index]
 
-            row = alerts_df.iloc[i]
+        st.markdown(
+            create_flow_card(trade),
+            unsafe_allow_html=True
+        )
 
-            alert_html = create_flow_card(row)
+    if index + 1 < len(remaining_trades):
+
+        with col_right:
+
+            trade = remaining_trades.iloc[index + 1]
 
             st.markdown(
-                alert_html,
+                create_flow_card(trade),
                 unsafe_allow_html=True
             )
 
 
-    # RIGHT CARD
-    with col_right:
-
-        if i + 1 < len(alerts_df):
-
-            row = alerts_df.iloc[i + 1]
-
-            alert_html = create_flow_card(row)
-
-            st.markdown(
-                alert_html,
-                unsafe_allow_html=True
-            )
-
-
-# ============================================================
+# =========================================================
 # FOOTER
-# ============================================================
+# =========================================================
 
 st.markdown(
     """
-    <div class="footer">
-        LK Institutional Options Flow Scanner |
-        Smart Money Detection System |
-        Institutional Flow Analysis
+    <div style="
+        text-align:center;
+        color:#718096;
+        padding:30px;
+        font-size:14px;
+    ">
+        LK Institutional Options Flow Scanner
+        • Smart Money Detection Engine
     </div>
     """,
     unsafe_allow_html=True
